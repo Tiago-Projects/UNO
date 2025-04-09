@@ -1,0 +1,18 @@
+<div 
+    *ngIf="!inverse" 
+    class="card" 
+    [ngClass]="{ 'card-inverse': inverse }" 
+    [ngStyle]="{ 'background-color': getColor() }">
+
+    <div class="corner top">
+        {{ getType() }}
+    </div>
+
+    <div class="card-oval" >
+        <div class="middle" [ngStyle]="{ 'color': getColor() }"> {{ getType() }} </div>
+    </div>
+
+    <div class="corner bottom">
+        {{ getType() }}
+    </div>
+</div> 
