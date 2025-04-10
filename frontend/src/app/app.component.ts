@@ -2,15 +2,14 @@ import { inject, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 import { GameControllerService } from './shared/GameController/game-controller.service';
-import { Suit } from './module/card/enum/Suit';
-import { Type } from './module/card/enum/Type';
 import { Card } from './module/card/class/card';
 import { CardComponent } from './module/card/card.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CardComponent],
+  imports: [RouterOutlet, CardComponent, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -18,14 +17,16 @@ export class AppComponent {
     title = 'UNO';
     gameController = inject(GameControllerService);
 
-    protected newCard = new Card(Suit.GREEN, Type.TWO);
+    deck: Card[] = [];
 
-    getCard() {
-        return this.gameController.getCard();
+    getDeck(): void {
+        this.gameController.getDeck().subscribe(
+            newDeck => {
+                console.log(newDeck);
+                this.deck = newDeck;
+            }
+        );
     }
 
-    onNgInit() {
-        var card = this.getCard();
-        console.log(card);
-    }
+    onNgInit() {}
 }

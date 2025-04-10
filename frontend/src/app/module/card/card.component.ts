@@ -20,34 +20,34 @@ export class CardComponent {
     constructor() {
     };
 
-    getColor() {
+    getColor(): string {
         if (!this.card) return 'white';
-
         const suit = this.card.getSuit();
-
-        switch (suit) {
-            case Suit.RED: return 'red';
-            case Suit.YELLOW: return 'yellow';
-            case Suit.BLUE: return 'blue';
-            case Suit.GREEN: return 'green';
-            case Suit.BLACK: return 'black';
-            default: return 'white';
-        }
+        if(suit === "WILD") return 'black';
+        return suit;
     }
 
-    getType() {
+    getType(): string {
         if (!this.card) return 'none';
 
         const type = this.card.getType();
 
-        switch (type) {
-            case Type.NONE: return 'none';
-            case Type.REVERSE: return 'reverse';
-            case Type.SKIP: return 'skip';
-            case Type.DRAW_TWO: return '+2';
-            case Type.WILD: return 'wild';
-            case Type.WILD_DRAW_FOUR: return '+4';
-            default: return type.toString().toLowerCase();
-        }
+        if (type === "ZERO") return '0';
+        if (type === "ONE") return '1';
+        if (type === "TWO") return '2';
+        if (type === "THREE") return '3';
+        if (type === "FOUR") return '4';
+        if (type === "FIVE") return '5';
+        if (type === "SIX") return '6';
+        if (type === "SEVEN") return '7';
+        if (type === "EIGHT") return '8';
+        if (type === "NINE") return '9';
+        if (type === "REVERSE") return 'Reverse';
+        if (type === "SKIP") return 'Skip';
+        if (type === "DRAW_TWO") return '+2';
+        if (type === "WILD") return 'Wild';
+        if (type === "WILD_DRAW_FOUR") return '+4';
+
+        return 'none';  
     }
 }
