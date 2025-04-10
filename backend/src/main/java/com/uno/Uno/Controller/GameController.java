@@ -13,7 +13,7 @@ public class GameController {
 
     @GetMapping("get-card")
     public ResponseEntity<?> getCard() {
-        CardDto cardDto = new CardDto(Suit.RED, Type.EIGHT);
+        CardDto cardDto = new CardDto(Type.EIGHT, Suit.RED);
         return ResponseEntity.ok(cardDto);
     }
 }

@@ -12,6 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CardDto {
-    private Suit suit;
     private Type type;
+    private Suit suit;
 }
