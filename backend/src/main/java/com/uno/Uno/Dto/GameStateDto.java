@@ -5,11 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeckDto {
-    private CardDto[] allDeck;
+public class GameStateDto {
+    private DeckDto deck;
+    private CardDto tableCard;
+    
+    private PlayerDto[] players;
 }

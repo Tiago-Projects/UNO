@@ -3,15 +3,20 @@ package com.uno.Uno.Model;
 import com.uno.Uno.Model.Enum.Suit;
 import com.uno.Uno.Model.Enum.Type;
 
+import com.uno.Uno.Exception.NoCardInDeckException;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+
+@Getter
 public class DeckModel {
 
-    private List<CardModel> allDeck;
+    private List<CardModel> deck;
 
     public DeckModel() {
-        this.allDeck = shuffleDeck(initializeDeck());
+        this.deck = shuffleDeck(initializeDeck());
     }
 
     private List<CardModel> initializeDeck() {
@@ -55,11 +60,13 @@ public class DeckModel {
         return allDeckShuffled;
     }
 
-    public List<CardModel> getAllDeck() {
-        return allDeck;
-    }
 
     public Integer deckSize() {
-        return allDeck.size();
+        return this.deck.size();
+    }
+
+    public CardModel pop() {
+        if (this.deck.isEmpty()) throw new NoCardInDeckException("No cards in deck");
+        return this.deck.removeFirst();
     }
 }

@@ -21,4 +21,11 @@ export class GameControllerService {
                 map(response => response.allDeck.map(obj => new Card(obj.suit, obj.type)))
             );
     }
+
+    startGame(): Observable<any> {
+        return this.http.get("http://localhost:8080/api/start-game")
+            .pipe(
+                map(response => response)
+            );
+    }
 }

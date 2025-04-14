@@ -10,11 +10,7 @@ class DeckModelTest {
     @Test
     void testDeckCreation() {
         deckModel = new DeckModel();
-        System.out.println(deckModel.getAllDeck());
+        System.out.println(deckModel.getDeck());
         assertEquals(108, deckModel.deckSize(), "Deck size should be 108 after creation.");
     }
-
-
-
-  
 }

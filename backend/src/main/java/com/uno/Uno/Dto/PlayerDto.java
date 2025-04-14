@@ -5,11 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeckDto {
-    private CardDto[] allDeck;
+public class PlayerDto {
+    private String name;
+    private CardDto[] hand; // Changed from List<CardDto> to CardDto[]
 }

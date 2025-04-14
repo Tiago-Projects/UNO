@@ -1,15 +1,17 @@
-package com.uno.Uno.Dto;
+package com.uno.Uno.Model;
+
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeckDto {
-    private CardDto[] allDeck;
+public abstract class Player {
+    String name;
+    List<CardModel> hand;
 }

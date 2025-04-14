@@ -28,5 +28,13 @@ export class AppComponent {
         );
     }
 
+    startGame(): void {
+        this.gameController.startGame().subscribe(
+            response => {
+                console.log(response);
+            }
+        );
+    }
+
     onNgInit() {}
 }

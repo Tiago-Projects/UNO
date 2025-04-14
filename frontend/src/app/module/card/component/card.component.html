@@ -1,7 +1,6 @@
 <div 
     *ngIf="!inverse" 
     class="card" 
-    [ngClass]="{ 'card-inverse': inverse }" 
     [ngStyle]="{ 'background-color': getColor() }">
 
     <div class="corner top">
@@ -16,3 +15,12 @@
         {{ getType() }}
     </div>
 </div> 
+
+<div 
+    *ngIf="inverse"
+    class="card inverse">
+    
+    <div class="card-oval" >
+        <span class="uno-text">UNO</span>
+    </div>
+</div>
