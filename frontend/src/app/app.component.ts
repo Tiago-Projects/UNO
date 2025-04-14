@@ -1,10 +1,9 @@
-import { inject, Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-
-import { GameControllerService } from './shared/GameController/game-controller.service';
-import { Card } from './module/card/class/card';
+import { GameWebSocketControllerService } from './shared/GameWebSocketController/game-web-socket-controller.service';
 import { CardComponent } from './module/card/card.component';
 import { CommonModule } from '@angular/common';
+import { GameState } from './shared/GameState/game-state';
 
 @Component({
   selector: 'app-root',
@@ -13,28 +12,22 @@ import { CommonModule } from '@angular/common';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+
     title = 'UNO';
-    gameController = inject(GameControllerService);
+    gameState: GameState = new GameState();
 
-    deck: Card[] = [];
 
-    getDeck(): void {
-        this.gameController.getDeck().subscribe(
-            newDeck => {
-                console.log(newDeck);
-                this.deck = newDeck;
+    constructor(private gameWebSocketController: GameWebSocketControllerService) {}
+
+    ngOnInit(): void {
+        this.gameWebSocketController.connect();
+
+        this.gameWebSocketController.gameState$.subscribe((gameState) => {
+            if (gameState) {
+                this.gameState = gameState;
+                console.log('Game state updated:', this.gameState);
             }
-        );
+        });
     }
-
-    startGame(): void {
-        this.gameController.startGame().subscribe(
-            response => {
-                console.log(response);
-            }
-        );
-    }
-
-    onNgInit() {}
 }

@@ -6,7 +6,8 @@ export class Card {
     private suit: Suit;
     private type: Type;
 
-    constructor(suit: Suit, type: Type) {
+
+    constructor(suit: Suit = Suit.NONE, type: Type = Type.NONE) {
         this.suit = suit;
         this.type = type;
     }

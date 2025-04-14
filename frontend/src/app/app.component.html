@@ -1,3 +1,17 @@
-<button (click)="startGame()">Start Game</button>
 
-<card *ngFor="let card of deck" [card]="card"/>
+
+<div *ngIf="gameState">
+    <h1>Game State</h1>
+
+    <h2>Table Card:</h2>
+    <card [card]="gameState.getTableCard()"></card>
+
+
+    <div *ngFor="let player of gameState.getPlayers()">
+        <h2>{{ player.getName() }}:</h2>
+        <div *ngFor="let card of player.getHand()">
+            <card [card]="card"></card>
+        </div>
+    </div>
+</div>
+

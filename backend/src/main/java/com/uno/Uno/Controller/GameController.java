@@ -14,6 +14,7 @@ import com.uno.Uno.Model.GameStateModel;
 import com.uno.Uno.Service.GameService;
 
 
+@Deprecated
 @RestController
 @CrossOrigin("http://localhost:4200")
 @RequestMapping("api")

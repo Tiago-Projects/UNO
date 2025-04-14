@@ -22,6 +22,7 @@ public class GameService {
     private GameStateModel gameState;
 
     public GameService() {
+        startGame();
     } 
 
     public void startGame() {

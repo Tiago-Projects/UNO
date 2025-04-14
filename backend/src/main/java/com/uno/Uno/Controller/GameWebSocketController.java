@@ -1,0 +1,25 @@
+package com.uno.Uno.Controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.stereotype.Controller;
+
+import com.uno.Uno.Dto.GameStateDto;
+import com.uno.Uno.Mapper.GameStateMapper;
+import com.uno.Uno.Service.GameService;
+
+@Controller
+public class GameWebSocketController {
+
+    @Autowired
+    private GameService gameService;
+
+    @MessageMapping("/game-state")
+    @SendTo("/topic/game-state")
+    public GameStateDto getGameState() throws Exception {
+        
+        System.out.println("GameState: " + gameService.getGameState().toString());
+        return GameStateMapper.toDto(gameService.getGameState());
+    }
+}

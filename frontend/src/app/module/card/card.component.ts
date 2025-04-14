@@ -14,7 +14,7 @@ import { Type } from './enum/Type';
 })
 export class CardComponent {
     @Input({ required: true }) card: Card | undefined;
-    inverse: boolean = true;
+    inverse: boolean = false;
 
 
     constructor() {
