@@ -1,18 +1,17 @@
 import { Component, Input } from '@angular/core';
 import { Card } from './class/card';
 import { CommonModule } from '@angular/common';
-import { Suit } from './enum/Suit';
-import { Type } from './enum/Type';
 
 
 @Component({
-    selector: 'card',
+    selector: 'app-card',
     standalone: true,
     imports: [CommonModule],
     templateUrl: 'component/card.component.html',
     styleUrls: ['component/card.component.css'],
 })
 export class CardComponent {
+    @Input() card_dimensions: {width: string, height: string} = { width: "100px", height: "150px" };
     @Input({ required: true }) card: Card | undefined;
     inverse: boolean = false;
 

@@ -4,11 +4,12 @@ import { GameWebSocketControllerService } from './shared/GameWebSocketController
 import { CardComponent } from './module/card/card.component';
 import { CommonModule } from '@angular/common';
 import { GameState } from './shared/GameState/game-state';
+import { PlayerHandComponent } from './module/player-hand/player-hand.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CardComponent, CommonModule],
+  imports: [RouterOutlet, CardComponent, PlayerHandComponent, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -29,5 +30,17 @@ export class AppComponent implements OnInit {
                 console.log('Game state updated:', this.gameState);
             }
         });
+    }
+
+    getSmallestCardDimensions(): { width: string, height: string } {
+        return { width: "65px", height: "105px" };
+    }
+
+    getMediumCardDimensions(): { width: string, height: string } {
+        return { width: "130px", height: "210px" };
+    }
+
+    getBiggestCardDimensions(): { width: string, height: string } {
+        return { width: "260px", height: "420px" };
     }
 }
