@@ -52,25 +52,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
+    position: relative;
 }   
 
 .middle {
-    
-    font-size: calc(var(--card-width) * 0.50);
-    transform: rotate(-35deg);
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    color: white;
-    text-shadow:
-        -2px -2px 0 black,
-        2px -2px 0 black,
-        -2px 2px 0 black,
-        2px 2px 0 black,
-        0px 2px 0 black,
-        2px 0px 0 black,
-        -2px 0px 0 black,
-        0px -2px 0 black,
-        -5px 5px 5px rgba(0, 0, 0, 0.5);
+    transform: rotate(-35deg);
 }
 
 
@@ -78,23 +69,11 @@
     position: absolute;
     color: white;
     margin: 0;
-    font-size: calc(var(--card-width) * 0.25);
 
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-
-    text-shadow:
-        -2px -2px 0 black,
-        2px -2px 0 black,
-        -2px 2px 0 black,
-        2px 2px 0 black,
-        0px 2px 0 black,
-        2px 0px 0 black,
-        -2px 0px 0 black,
-        0px -2px 0 black,
-        -5px 5px 5px rgba(0, 0, 0, 0.5);
 }
 
 .top {

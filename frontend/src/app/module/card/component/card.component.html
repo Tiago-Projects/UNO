@@ -7,28 +7,19 @@
 
     <div class="card-inside">
         <div class="corner top">
-            <app-skip-svg *ngIf="isSkipCard()" [size]="35"></app-skip-svg>
-            <ng-container *ngIf="!isSkipCard()">
-                {{ getType() }}
-            </ng-container>
+            <app-card-icon [type]="card.getType()" [fontSize]="100" [size]="35"></app-card-icon>
         </div>
 
         <div class="card-oval-outside">
             <div class="card-oval-inside">
                 <div class="middle">
-                    <app-skip-svg *ngIf="isSkipCard()"></app-skip-svg>
-                    <ng-container *ngIf="!isSkipCard()">
-                        {{ getType() }} 
-                    </ng-container>
+                    <app-card-icon [type]="card.getType()" [fontSize]="100" [size]="75"></app-card-icon>
                 </div>
             </div>
         </div>
 
         <div class="corner bottom">
-            <app-skip-svg *ngIf="isSkipCard()" [size]="35"></app-skip-svg>
-            <ng-container *ngIf="!isSkipCard()">
-                {{ getType() }}
-            </ng-container>
+            <app-card-icon [type]="card.getType()" [fontSize]="100" [size]="35"></app-card-icon>
         </div>
     </div>
 </div>
