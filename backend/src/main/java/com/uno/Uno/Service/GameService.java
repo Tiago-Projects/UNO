@@ -11,6 +11,7 @@ import com.uno.Uno.Model.GameStateModel;
 import com.uno.Uno.Model.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -48,6 +49,8 @@ public class GameService {
         for (int i = 0; i < numberCards; i++) {
             drawnCards.add(deck.pop());
         }
+        Collections.sort(drawnCards);
         return drawnCards;
     }
+
 }

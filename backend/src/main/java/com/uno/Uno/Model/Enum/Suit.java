@@ -1,9 +1,9 @@
 package com.uno.Uno.Model.Enum;
 
 public enum Suit {
-    RED,
+    RED ,
+    GREEN,
     YELLOW,
     BLUE,
-    GREEN,
     WILD
 }

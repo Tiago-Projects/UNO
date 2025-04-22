@@ -7,7 +7,7 @@ import lombok.Getter;
 
 
 @Getter
-public class CardModel {
+public class CardModel implements Comparable<CardModel> {
     private final Type type;
     private final Suit suit;
 
@@ -24,4 +24,14 @@ public class CardModel {
     public String toString() {
         return "Card { type: " + this.type + ", suit: " + this.suit + "}";
     }
+
+    @Override
+    public int compareTo(CardModel other) {
+        if(this.suit != other.suit) {
+            return this.suit.ordinal() - other.suit.ordinal();
+        }
+
+        return this.type.ordinal() - other.type.ordinal();
+    }
+    
 }
