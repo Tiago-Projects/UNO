@@ -1,35 +1,41 @@
 <!-- Real Ratio = 420 / 260 -->
 
-<div 
-    *ngIf="!inverse" 
-    class="card" 
-    [ngStyle]="{ 
+<div *ngIf="!inverse" class="card" [ngStyle]="{ 
         '--card-color': getColor(), 
         '--card-width': card_dimensions.width, 
         '--card-height': card_dimensions.height, }">
-    
+
     <div class="card-inside">
         <div class="corner top">
-            {{ getType() }}
+            <app-skip-svg *ngIf="isSkipCard()" [size]="35"></app-skip-svg>
+            <ng-container *ngIf="!isSkipCard()">
+                {{ getType() }}
+            </ng-container>
         </div>
-        
-        <div class="card-oval-outside" >
-            <div class="card-oval-inside" >
-                <div class="middle"> {{ getType() }} </div>
+
+        <div class="card-oval-outside">
+            <div class="card-oval-inside">
+                <div class="middle">
+                    <app-skip-svg *ngIf="isSkipCard()"></app-skip-svg>
+                    <ng-container *ngIf="!isSkipCard()">
+                        {{ getType() }} 
+                    </ng-container>
+                </div>
             </div>
         </div>
 
         <div class="corner bottom">
-            {{ getType() }}
+            <app-skip-svg *ngIf="isSkipCard()" [size]="35"></app-skip-svg>
+            <ng-container *ngIf="!isSkipCard()">
+                {{ getType() }}
+            </ng-container>
         </div>
     </div>
-</div> 
+</div>
 
-<div 
-    *ngIf="inverse"
-    class="card inverse">
-    
-    <div class="card-oval" >
+<div *ngIf="inverse" class="card inverse">
+
+    <div class="card-oval">
         <span class="uno-text">UNO</span>
     </div>
 </div>

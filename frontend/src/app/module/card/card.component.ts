@@ -1,12 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { Card } from './class/card';
 import { CommonModule } from '@angular/common';
+import { SkipSVGComponent } from '../../shared/SVG/skip-svg/skip-svg.component';
 
 
 @Component({
     selector: 'app-card',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, SkipSVGComponent],
     templateUrl: 'component/card.component.html',
     styleUrls: ['component/card.component.css'],
 })
@@ -26,6 +27,12 @@ export class CardComponent {
         return suit;
     }
 
+    isSkipCard(): boolean {
+        if (!this.card) return false;
+        const type = this.card.getType();
+        return type === "SKIP";
+    }
+
     getType(): string {
         if (!this.card) return 'none';
 
@@ -42,7 +49,6 @@ export class CardComponent {
         if (type === "EIGHT") return '8';
         if (type === "NINE") return '9';
         if (type === "REVERSE") return 'Reverse';
-        if (type === "SKIP") return 'Skip';
         if (type === "DRAW_TWO") return '+2';
         if (type === "WILD") return 'Wild';
         if (type === "WILD_DRAW_FOUR") return '+4';
