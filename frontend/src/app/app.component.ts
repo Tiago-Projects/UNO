@@ -31,6 +31,10 @@ export class AppComponent implements OnInit {
             }
         });
     }
+    
+    drawCard() {
+        this.gameWebSocketController.drawCard();
+    }
 
     getSmallestCardDimensions(): { width: string, height: string } {
         return { width: "65px", height: "105px" };
@@ -43,4 +47,6 @@ export class AppComponent implements OnInit {
     getBiggestCardDimensions(): { width: string, height: string } {
         return { width: "260px", height: "420px" };
     }
+
+
 }

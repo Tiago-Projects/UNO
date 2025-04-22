@@ -23,5 +23,9 @@
     <h2>Médio:</h2>
     <app-card [card]="gameState.getTableCard()" [card_dimensions]="getMediumCardDimensions()"></app-card>
 
+    <button (click)="drawCard()">New Card</button>
+
     <app-player-hand [player]="gameState.getPlayers()[0]"></app-player-hand>
+
+
 </div>

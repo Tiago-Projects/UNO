@@ -1,0 +1,22 @@
+.player-hand {
+    position: fixed;
+
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    background-color: cyan;
+
+    height: 250px;
+    width: 1000px;
+
+    pointer-events: none;
+}
+
+.player-card {
+    transition: transform 0.3s;
+}
+
+.player-card:hover {
+    transform: scale(1.1);
+}

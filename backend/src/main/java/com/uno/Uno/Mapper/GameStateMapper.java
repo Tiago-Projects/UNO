@@ -9,6 +9,7 @@ public class GameStateMapper {
         return new GameStateDto(
                 DeckMapper.toDto(gameState.getDeck()),
                 CardMapper.toDto(gameState.getTableCard()),
+                PlayerMapper.toDto(gameState.getCurrentPlayer()),
                 gameState.getPlayers().stream()
                     .map(PlayerMapper::toDto)
                     .toArray(com.uno.Uno.Dto.PlayerDto[]::new)

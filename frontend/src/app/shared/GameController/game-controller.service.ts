@@ -28,4 +28,11 @@ export class GameControllerService {
                 map(response => response)
             );
     }
+
+    getCardFromDeck(): Observable<any> {
+        return this.http.post("http://localhost:8080/api/get-card-from-deck", {})
+            .pipe(
+                map(response => response)
+            );
+    }
 }

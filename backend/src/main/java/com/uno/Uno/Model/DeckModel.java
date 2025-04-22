@@ -16,7 +16,7 @@ public class DeckModel {
     private List<CardModel> deck;
 
     public DeckModel() {
-        this.deck = shuffleDeck(initializeDeck());
+        this.deck = initializeDeck();
     }
 
     private List<CardModel> initializeDeck() {
@@ -48,21 +48,15 @@ public class DeckModel {
         return allDeck;
     }
 
-    private List<CardModel> shuffleDeck(List<CardModel> allDeckUnshuffled) {
-        List<CardModel> allDeckShuffled = new ArrayList<>();
-
-        while (!allDeckUnshuffled.isEmpty()) {
-            int randomIndex = (int) (Math.random() * allDeckUnshuffled.size());
-            allDeckShuffled.add(allDeckUnshuffled.get(randomIndex));
-            allDeckUnshuffled.remove(randomIndex);
-        }
-
-        return allDeckShuffled;
-    }
-
 
     public Integer deckSize() {
         return this.deck.size();
+    }
+
+    public CardModel popRandom() {
+        if (this.deck.isEmpty()) throw new NoCardInDeckException("No cards in deck");
+        int randomIndex = (int) (Math.random() * this.deck.size());
+        return this.deck.remove(randomIndex);
     }
 
     public CardModel pop() {

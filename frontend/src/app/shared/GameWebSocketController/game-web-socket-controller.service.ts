@@ -63,7 +63,13 @@ export class GameWebSocketControllerService {
             destination: '/app/game-state',
             body: ''
         });
+    }
 
+    public drawCard() {
+        this.client.publish({
+            destination: '/app/draw-card',
+            body: ''
+        });
     }
 
     public disconnect() {

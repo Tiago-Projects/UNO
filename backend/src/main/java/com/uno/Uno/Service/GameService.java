@@ -42,15 +42,25 @@ public class GameService {
 
         this.gameState.setPlayers(players);
         this.gameState.setDeck(deck);
+        this.gameState.setCurrentPlayer(players.get(0)); // TODO: change this to randomly select a player
+
     }
     
     private List<CardModel> drawCards(DeckModel deck, int numberCards) {
         List<CardModel> drawnCards = new ArrayList<>();
         for (int i = 0; i < numberCards; i++) {
-            drawnCards.add(deck.pop());
+            drawnCards.add(deck.popRandom());
         }
         Collections.sort(drawnCards);
         return drawnCards;
     }
 
+    public void drawCard() {
+        Player player = this.gameState.getCurrentPlayer();
+        DeckModel deck = this.gameState.getDeck();
+        CardModel drawnCard = deck.popRandom();
+
+        player.addCard(drawnCard);
+        Collections.sort(player.getHand());
+    }
 }

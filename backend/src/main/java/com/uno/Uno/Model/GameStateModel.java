@@ -14,6 +14,7 @@ import java.util.List;
 public class GameStateModel {
     private DeckModel deck;
     private CardModel tableCard;
-
+    private Player currentPlayer;
+    
     private List<Player> players;
 }

@@ -1,5 +1,7 @@
 package com.uno.Uno.Controller;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -20,6 +22,13 @@ public class GameWebSocketController {
     public GameStateDto getGameState() throws Exception {
         
         System.out.println("GameState: " + gameService.getGameState().toString());
+        return GameStateMapper.toDto(gameService.getGameState());
+    }
+
+    @MessageMapping("/draw-card")
+    @SendTo("/topic/game-state")
+    public GameStateDto drawCard(Principal principal) throws Exception {
+        gameService.drawCard();
         return GameStateMapper.toDto(gameService.getGameState());
     }
 }

@@ -12,6 +12,7 @@ import lombok.Setter;
 public class GameStateDto {
     private DeckDto deck;
     private CardDto tableCard;
+    private PlayerDto currentPlayer;
     
     private PlayerDto[] players;
 }

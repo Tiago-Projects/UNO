@@ -14,4 +14,8 @@ import lombok.Setter;
 public abstract class Player {
     String name;
     List<CardModel> hand;
+
+    public boolean addCard(CardModel card) {
+        return this.hand.add(card);
+    }
 }
