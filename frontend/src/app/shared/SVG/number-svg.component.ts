@@ -7,10 +7,10 @@ import { Component, Input } from '@angular/core';
     <svg viewBox="0 0 100 100" 
         [attr.width]="size"
         [attr.height]="size"
-        overflow="visible"
-        preserveAspectRatio="xMidYMid meet">
+        overflow="visible">
         <text
-            x="50" y="60"
+            x="50%"
+            y="60%"
             text-anchor="middle"
             dominant-baseline="middle"
             [attr.font-size]="fontSize"
@@ -22,7 +22,7 @@ import { Component, Input } from '@angular/core';
     `,
 })
 export class NumberSVGComponent {
-    @Input() number!: string;
+    @Input() number!: number;
     @Input() size: number = 50;
     @Input() fontSize: number = 50;
 }

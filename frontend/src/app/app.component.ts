@@ -16,7 +16,7 @@ import { PlayerHandComponent } from './features/player-hand/player-hand.componen
 export class AppComponent implements OnInit {
 
     title = 'UNO';
-    gameState: GameState = new GameState();
+    gameState!: GameState;
 
 
     constructor(private gameWebSocketController: GameWebSocketControllerService) {}

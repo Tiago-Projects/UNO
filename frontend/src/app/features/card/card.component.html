@@ -7,19 +7,31 @@
 
     <div class="card-inside">
         <div class="corner top">
-            <app-card-icon [type]="card.getType()" [fontSize]="100" [size]="35"></app-card-icon>
+            <ng-container [ngSwitch]="strategy.renderCard()">
+                <app-number-svg *ngSwitchCase="'number'" [number]="getNumber()" [size]="35" [fontSize]="125"></app-number-svg>
+                <app-skip-svg *ngSwitchCase="'skip'" [size]="35"></app-skip-svg>
+                <app-draw-two-svg *ngSwitchCase="'draw-two'" [size]="35" [fontSize]="125"></app-draw-two-svg>
+            </ng-container>
         </div>
 
         <div class="card-oval-outside">
             <div class="card-oval-inside">
                 <div class="middle">
-                    <app-card-icon [type]="card.getType()" [fontSize]="100" [size]="75"></app-card-icon>
+                    <ng-container [ngSwitch]="strategy.renderCard()">
+                        <app-number-svg *ngSwitchCase="'number'" [number]="getNumber()" [size]="75" [fontSize]="125"></app-number-svg>
+                        <app-skip-svg *ngSwitchCase="'skip'" [size]="75"></app-skip-svg>
+                        <app-draw-two-middle-svg *ngSwitchCase="'draw-two'" [size]="75"></app-draw-two-middle-svg>
+                    </ng-container>
                 </div>
             </div>
         </div>
 
         <div class="corner bottom">
-            <app-card-icon [type]="card.getType()" [fontSize]="100" [size]="35"></app-card-icon>
+            <ng-container [ngSwitch]="strategy.renderCard()">
+                <app-number-svg *ngSwitchCase="'number'" [number]="getNumber()" [size]="35" [fontSize]="125"></app-number-svg>
+                <app-skip-svg *ngSwitchCase="'skip'" [size]="35"></app-skip-svg>
+                <app-draw-two-svg *ngSwitchCase="'draw-two'" [size]="35" [fontSize]="125"></app-draw-two-svg>
+            </ng-container>
         </div>
     </div>
 </div>

@@ -20,8 +20,6 @@ public class GameWebSocketController {
     @MessageMapping("/game-state")
     @SendTo("/topic/game-state")
     public GameStateDto getGameState() throws Exception {
-        
-        System.out.println("GameState: " + gameService.getGameState().toString());
         return GameStateMapper.toDto(gameService.getGameState());
     }
 

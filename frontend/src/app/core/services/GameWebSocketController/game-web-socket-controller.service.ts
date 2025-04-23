@@ -86,7 +86,7 @@ export class GameWebSocketControllerService {
         var players: Player[] = json.players.map((playersJson: any) => new Player(playersJson.name, playersJson.hand.map((cardJson: any) => new Card(cardJson.suit, cardJson.type)))) || [];
 
         // Mapping tableCard
-        var tableCard: Card = new Card(json.tableCard?.suit, json.tableCard?.type) || new Card();   
+        var tableCard: Card = new Card(json.tableCard?.suit, json.tableCard?.type);   
 
         return new GameState(deck, players, tableCard);
     }
