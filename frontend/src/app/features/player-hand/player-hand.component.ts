@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Player } from '../../../../core/models/Player/player';
-import { CardComponent } from '../../../../shared/card/card.component';
+import { Player } from '../../core/models/Player/player';
+import { CardComponent } from '../card/card.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -23,7 +23,7 @@ export class PlayerHandComponent {
     getStyle(index: number): any {
         return {
             'z-index': String(index),
-            'left': `${index * 50}px`,
+            'left': `${index * 100}px`,
             'position': 'absolute',
         }
     }
