@@ -1,5 +1,5 @@
-import { Suit } from "../enum/Suit";
-import { Type } from "../enum/Type";
+import { Suit } from "../../enums/Suit";
+import { Type } from "../../enums/Type";
 
 
 export class Card {

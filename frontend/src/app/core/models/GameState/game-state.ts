@@ -1,4 +1,4 @@
-import { Card } from "../../module/card/class/card";
+import { Card } from "../card/card";
 import { Player } from "../Player/player";
 
 export class GameState {

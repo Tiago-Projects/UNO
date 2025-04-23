@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Client, IMessage } from '@stomp/stompjs';
-import { GameState } from '../GameState/game-state';
+import { GameState } from '../../models/GameState/game-state';
 import { BehaviorSubject } from 'rxjs';
 
-import { Card } from '../../module/card/class/card';
-import { Player } from '../Player/player';
+import { Card } from '../../models/card/card';
+import { Player } from '../../models/Player/player';
 
 @Injectable({
     providedIn: 'root'

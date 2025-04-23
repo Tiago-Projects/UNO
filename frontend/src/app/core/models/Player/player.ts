@@ -1,4 +1,4 @@
-import { Card } from "../../module/card/class/card";
+import { Card } from "../card/card";
 
 export class Player {
     name: string = '';

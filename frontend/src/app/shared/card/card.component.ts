@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Card } from './class/card';
+import { Card } from '../../core/models/card/card';
 import { CommonModule } from '@angular/common';
 import { CardIconComponent } from '../card-icon/card-icon.component';
 

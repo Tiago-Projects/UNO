@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { GameWebSocketControllerService } from './shared/GameWebSocketController/game-web-socket-controller.service';
-import { CardComponent } from './module/card/card.component';
+import { GameWebSocketControllerService } from './core/services/GameWebSocketController/game-web-socket-controller.service';
+import { CardComponent } from './shared/card/card.component';
 import { CommonModule } from '@angular/common';
-import { GameState } from './shared/GameState/game-state';
-import { PlayerHandComponent } from './module/player-hand/player-hand.component';
+import { GameState } from './core/models/GameState/game-state';
+import { PlayerHandComponent } from './features/game/components/player-hand/player-hand.component';
 
 @Component({
   selector: 'app-root',

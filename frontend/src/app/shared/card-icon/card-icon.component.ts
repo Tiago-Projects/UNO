@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { NumberSVGComponent } from '../../shared/SVG/number-svg/number-svg.component';
-import { SkipSVGComponent } from '../../shared/SVG/skip-svg/skip-svg.component';
+import { NumberSVGComponent } from '../SVG/number-svg/number-svg.component';
+import { SkipSVGComponent } from '../SVG/skip-svg/skip-svg.component';
 
 @Component({
   selector: 'app-card-icon',
