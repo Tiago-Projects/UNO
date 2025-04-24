@@ -138,4 +138,8 @@ export namespace Type {
     export function isDrawFour(type: Type): boolean {
         return type === Type.WILD_DRAW_FOUR;
     }
+
+    export function isWild(type: Type): boolean {
+        return type === Type.WILD;
+    }
 }

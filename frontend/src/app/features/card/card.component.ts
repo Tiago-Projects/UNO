@@ -14,12 +14,13 @@ import { Suit } from '../../core/enums/Suit';
 import { ReverseSVGComponent } from '../../shared/SVG/reverse-svg.component';
 import { DrawFourSVGComponent } from '../../shared/SVG/draw-four/draw-four-svg.component';
 import { DrawFourMiddleSVGComponent } from '../../shared/SVG/draw-four/draw-four-middle-svg.component';
+import { WildSVGComponent } from '../../shared/SVG/wild-svg.component';
 
 
 @Component({
     selector: 'app-card',
     standalone: true,
-    imports: [CommonModule, NumberSVGComponent, SkipSVGComponent, DrawTwoMiddleSVGComponent, DrawTwoSVGComponent, ReverseSVGComponent, DrawFourSVGComponent, DrawFourMiddleSVGComponent],
+    imports: [CommonModule, NumberSVGComponent, SkipSVGComponent, DrawTwoMiddleSVGComponent, DrawTwoSVGComponent, ReverseSVGComponent, DrawFourSVGComponent, DrawFourMiddleSVGComponent, WildSVGComponent],
     templateUrl: 'card.component.html',
     styleUrls: ['card.component.css'],
 })

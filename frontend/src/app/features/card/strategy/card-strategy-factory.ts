@@ -8,6 +8,7 @@ import { SkipCard } from "./skip-card";
 import { DrawTwoCard } from "./draw-two-card";
 import { ReverseCard } from "./reverse-card";
 import { DrawFourCard } from "./draw-four-card";
+import { WildCard } from "./wild-card";
 
 export class CardStrategyFactory {
     static create(card: Card): CardStrategy {
@@ -31,6 +32,10 @@ export class CardStrategyFactory {
 
         if (Type.isDrawFour(type)) {
             return new DrawFourCard();
+        }
+
+        if (Type.isWild(type)) {
+            return new WildCard();
         }
 
         throw new Error(`No strategy found for card type: ${type}`);

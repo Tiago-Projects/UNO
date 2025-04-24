@@ -23,7 +23,7 @@ export class PlayerHandComponent {
     getStyle(index: number): any {
         return {
             'z-index': String(index),
-            'left': `${index * 100}px`,
+            'left': `${index * 75}px`,
             'position': 'absolute',
         }
     }
