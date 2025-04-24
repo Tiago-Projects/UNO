@@ -134,4 +134,8 @@ export namespace Type {
     export function isReverse(type: Type): boolean {
         return type === Type.REVERSE;
     }
+
+    export function isDrawFour(type: Type): boolean {
+        return type === Type.WILD_DRAW_FOUR;
+    }
 }

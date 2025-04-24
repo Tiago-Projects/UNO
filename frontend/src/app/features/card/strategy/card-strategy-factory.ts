@@ -7,6 +7,7 @@ import { NumberCard } from "./number-card";
 import { SkipCard } from "./skip-card";
 import { DrawTwoCard } from "./draw-two-card";
 import { ReverseCard } from "./reverse-card";
+import { DrawFourCard } from "./draw-four-card";
 
 export class CardStrategyFactory {
     static create(card: Card): CardStrategy {
@@ -26,6 +27,10 @@ export class CardStrategyFactory {
 
         if (Type.isReverse(type)) {
             return new ReverseCard();
+        }
+
+        if (Type.isDrawFour(type)) {
+            return new DrawFourCard();
         }
 
         throw new Error(`No strategy found for card type: ${type}`);
