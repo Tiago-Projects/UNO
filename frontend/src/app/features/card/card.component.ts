@@ -10,11 +10,13 @@ import { NumberSVGComponent } from '../../shared/SVG/number-svg.component';
 import { SkipSVGComponent } from '../../shared/SVG/skip-svg.component';
 import { DrawTwoMiddleSVGComponent } from '../../shared/SVG/draw-two/draw-two-middle-svg.component';
 import { DrawTwoSVGComponent } from '../../shared/SVG/draw-two/draw-two-svg.component';
+import { Suit } from '../../core/enums/Suit';
+import { ReverseSVGComponent } from '../../shared/SVG/reverse-svg.component';
 
 @Component({
     selector: 'app-card',
     standalone: true,
-    imports: [CommonModule, NumberSVGComponent, SkipSVGComponent, DrawTwoMiddleSVGComponent, DrawTwoSVGComponent],
+    imports: [CommonModule, NumberSVGComponent, SkipSVGComponent, DrawTwoMiddleSVGComponent, DrawTwoSVGComponent, ReverseSVGComponent],
     templateUrl: 'card.component.html',
     styleUrls: ['card.component.css'],
 })
@@ -38,21 +40,6 @@ export class CardComponent implements OnInit{
     }
 
     getColor(): string {
-        const suit = this.card.getSuit();
-        if(suit === "WILD") return 'black';
-        return suit;
-    }
-
-    isSkipCard(): boolean {
-        if (!this.card) return false;
-        const type = this.card.getType();
-        return type === "SKIP";
-    }
-
-    getType(): string {
-        if (!this.card) return 'none';
-
-        const type = this.card.getType();
-        return type;  
+        return Suit.getColor(this.card.getSuit());
     }
 }

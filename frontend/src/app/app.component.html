@@ -6,7 +6,7 @@
             <feComposite in="black" in2="outline" operator="in" result="border" />
 
             <feOffset in="border" dx="-5" dy="5" result="shadowBlur" />
-            <feGaussianBlur in="shadowBlur" stdDeviation="2" result="blurredShadow" />
+            <!--feGaussianBlur in="shadowBlur" stdDeviation="2" result="blurredShadow" /-->
 
             <feMerge>
                 <feMergeNode in="blurredShadow" />

@@ -45,4 +45,21 @@ export namespace Suit {
     export function isWild(suit: Suit): boolean {
         return suit === Suit.WILD;
     }
+
+    export function getColor(suit: Suit): string {
+        switch (suit) {
+            case Suit.RED:
+                return "red";
+            case Suit.YELLOW:
+                return "yellow";
+            case Suit.BLUE:
+                return "blue";
+            case Suit.GREEN:
+                return "green";
+            case Suit.WILD:
+                return "black";
+            default:
+                return "white";
+        }
+    }
 }

@@ -131,4 +131,7 @@ export namespace Type {
         return type === Type.DRAW_TWO;
     }
 
+    export function isReverse(type: Type): boolean {
+        return type === Type.REVERSE;
+    }
 }
