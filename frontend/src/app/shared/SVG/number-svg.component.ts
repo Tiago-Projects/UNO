@@ -15,7 +15,7 @@ import { Component, Input } from '@angular/core';
             dominant-baseline="middle"
             [attr.font-size]="fontSize"
             fill="white"
-            filter="url(#shadow)">
+            filter="url(#shadow) url(#border)">
                 {{ number }}
         </text>
     </svg>

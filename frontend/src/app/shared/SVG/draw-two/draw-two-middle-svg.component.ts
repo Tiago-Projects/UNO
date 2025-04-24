@@ -8,8 +8,10 @@ import { Component, Input } from '@angular/core';
         [attr.width]="size"
         [attr.height]="size"
         overflow="visible">
-        <rect x="40" y="10" width="40" height="60" fill="white" filter="url(#shadow)" rx="5" ry="5"/>
-        <rect x="20" y="30" width="40" height="60" fill="white" filter="url(#shadow)" rx="5" ry="5"/>
+        <g filter="url(#shadow)">
+            <rect x="40" y="10" width="40" height="60" fill="white" filter="url(#border)" rx="5" ry="5"/>
+            <rect x="20" y="30" width="40" height="60" fill="white" filter="url(#border)" rx="5" ry="5"/>
+        </g>
     </svg>
     `,
 })

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <defs>
+        <filter id="border" x="-50%" y="-50%" width="200%" height="200%">
+            <feFlood flood-color="black" />
+            <feMorphology in="SourceAlpha" operator="dilate" radius="3" />
+            <feMerge>
+                <feMergeNode in="border" />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+        <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+            <feFlood flood-color="black" result="black" />
+            <feMorphology in="SourceAlpha" operator="dilate" radius="0" result="outline" />
+            <feOffset in="black" dx="-5" dy="5" result="shadow" />
+            <feMerge>
+                <feMergeNode in="shadow" />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+    </defs>
+</svg>

@@ -1,7 +1,6 @@
 .player-hand {
-    position: fixed;
+    position: relative;
 
-    bottom: 50px;
     left: 50%;
     transform: translateX(-50%);
 
@@ -10,7 +9,6 @@
     height: 250px;
     width: 1000px;
 
-    pointer-events: none;
 }
 
 .player-card {
@@ -19,4 +17,5 @@
 
 .player-card:hover {
     transform: scale(1.1);
+    transform: translateY(-100px);
 }

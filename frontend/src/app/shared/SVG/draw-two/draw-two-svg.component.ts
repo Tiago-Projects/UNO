@@ -8,27 +8,30 @@ import { Component, Input } from '@angular/core';
         [attr.width]="size"
         [attr.height]="size"
         overflow="visible">
-        <text
-            x="20%"
-            y="60%"
-            text-anchor="middle"
-            dominant-baseline="middle"
-            [attr.font-size]="fontSize*2/3"
-            fill="white"
-            filter="url(#shadow)">
-                +
-        </text>
-        <text
-            x="70%"
-            y="60%"
-            text-anchor="middle"
-            dominant-baseline="middle"
-            [attr.font-size]="fontSize*0.9"
-            fill="white"
-            filter="url(#shadow)">
-                2
-        </text>
 
+        <g filter="url(#shadow)">
+            <text
+                x="20%"
+                y="60%"
+                text-anchor="middle"
+                dominant-baseline="middle"
+                [attr.font-size]="fontSize*2/3"
+                fill="white"
+                filter="url(#border)"
+                >
+                    +
+            </text>
+            <text
+                x="70%"
+                y="60%"
+                text-anchor="middle"
+                dominant-baseline="middle"
+                [attr.font-size]="fontSize*0.9"
+                fill="white"
+                filter="url(#border)">
+                    2
+            </text>
+        </g>
     </svg>
     `,
 })

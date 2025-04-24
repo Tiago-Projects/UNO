@@ -1,22 +1,3 @@
-<svg display="none">
-    <defs>
-        <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-            <feFlood flood-color="black" result="black" />
-            <feMorphology in="SourceAlpha" operator="dilate" radius="2" result="outline" />
-            <feComposite in="black" in2="outline" operator="in" result="border" />
-
-            <feOffset in="border" dx="-5" dy="5" result="shadowBlur" />
-            <!--feGaussianBlur in="shadowBlur" stdDeviation="2" result="blurredShadow" /-->
-
-            <feMerge>
-                <feMergeNode in="blurredShadow" />
-                <feMergeNode in="border" />
-                <feMergeNode in="SourceGraphic" />
-            </feMerge>
-        </filter>
-    </defs>
-</svg>
-
 <div class="app-wrapper"*ngIf="gameState" style="background-color: red; padding: 10px;">
     <h1>Game State</h1>
 

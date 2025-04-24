@@ -11,7 +11,7 @@ import { Component, Input } from '@angular/core';
         overflow="visible"
         preserveAspectRatio="xMidYMid meet">
 
-        <g filter="url(#shadow)">
+        <g filter="url(#shadow) url(#border)">
             <line 
                 x1="20" y1="80" x2="80" y2="20" 
                 stroke="white" 
