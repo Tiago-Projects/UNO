@@ -32,33 +32,33 @@ public class PlayerMapperTest {
         assertEquals(botDto.getName(), "Bot 1");
 
         assertEquals(botDto.getHand().length, 2);
-        assertEquals(botDto.getHand()[0].getSuit(), Suit.RED);
-        assertEquals(botDto.getHand()[0].getType(), Type.FOUR);
+        assertEquals(botDto.getHand()[0].getSuit(), card1.getSuit());
+        assertEquals(botDto.getHand()[0].getType(), card1.getType());
 
-        assertEquals(botDto.getHand()[1].getSuit(), Suit.WILD);
-        assertEquals(botDto.getHand()[1].getType(), Type.WILD);
+        assertEquals(botDto.getHand()[1].getSuit(), card2.getSuit());
+        assertEquals(botDto.getHand()[1].getType(), card2.getType());
     }
 
 
     @Test
     void testToDtoPlayer() {
-        Player bot = new PlayerModel("Bot 1");
+        Player player = new PlayerModel("Bot 1");
 
         CardModel card1 = new CardModel(Type.FOUR, Suit.RED);
         CardModel card2 = new CardModel(Type.WILD, Suit.WILD);
 
-        bot.addCard(card1);
-        bot.addCard(card2);
+        player.addCard(card1);
+        player.addCard(card2);
 
-        PlayerDto botDto = PlayerMapper.toDto(bot);
+        PlayerDto playerDto = PlayerMapper.toDto(player);
 
-        assertEquals(botDto.getName(), "Bot 1");
+        assertEquals(playerDto.getName(), "Bot 1");
 
-        assertEquals(botDto.getHand().length, 2);
-        assertEquals(botDto.getHand()[0].getSuit(), Suit.RED);
-        assertEquals(botDto.getHand()[0].getType(), Type.FOUR);
+        assertEquals(playerDto.getHand().length, 2);
+        assertEquals(playerDto.getHand()[0].getSuit(), card1.getSuit());
+        assertEquals(playerDto.getHand()[0].getType(), card1.getType());
 
-        assertEquals(botDto.getHand()[1].getSuit(), Suit.WILD);
-        assertEquals(botDto.getHand()[1].getType(), Type.WILD);
+        assertEquals(playerDto.getHand()[1].getSuit(), card2.getSuit());
+        assertEquals(playerDto.getHand()[1].getType(), card2.getType());
     }
 }
