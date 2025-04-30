@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Random;
 
-@SpringBootTest
+
 class DeckModelTest {
 
     @Test

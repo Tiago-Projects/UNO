@@ -10,7 +10,7 @@ import com.uno.Uno.Model.CardModel;
 import com.uno.Uno.Model.Enum.Suit;
 import com.uno.Uno.Model.Enum.Type;
 
-@SpringBootTest
+
 public class CardMapperTest {
     
     @Test

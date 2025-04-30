@@ -1,7 +1,6 @@
 package com.uno.Uno.Service;
 
 
-import lombok.*;
 import org.springframework.stereotype.Service;
 
 import com.uno.Uno.Model.BotModel;
@@ -10,12 +9,14 @@ import com.uno.Uno.Model.DeckModel;
 import com.uno.Uno.Model.GameStateModel;
 import com.uno.Uno.Model.Player;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Service
 @Getter
-@Service    
 public class GameService {
     private static final int NUMBER_PLAYERS = 4;
     private static final int NUMBER_INITIAL_CARDS = 7;
@@ -24,7 +25,15 @@ public class GameService {
 
     public GameService() {
         startGame();
-    } 
+    }
+
+    public static int getNumberPlayers() {
+        return GameService.NUMBER_PLAYERS;
+    }
+
+    public static int getNumberInitialCards() {
+        return GameService.NUMBER_INITIAL_CARDS;
+    }
 
     public void startGame() {
         DeckModel deck = new DeckModel();

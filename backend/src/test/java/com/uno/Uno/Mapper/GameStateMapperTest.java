@@ -13,7 +13,7 @@ import com.uno.Uno.Model.GameStateModel;
 import com.uno.Uno.Model.Player;
 import com.uno.Uno.Model.PlayerModel;
 
-@SpringBootTest
+
 public class GameStateMapperTest {
     
     @Test

@@ -9,13 +9,13 @@ import org.springframework.stereotype.Controller;
 
 import com.uno.Uno.Dto.GameStateDto;
 import com.uno.Uno.Mapper.GameStateMapper;
-import com.uno.Uno.Service.GameService;
+import com.uno.Uno.Service.GameServiceTest;
 
 @Controller
 public class GameWebSocketController {
 
     @Autowired
-    private GameService gameService;
+    private GameServiceTest gameService;
 
     @MessageMapping("/game-state")
     @SendTo("/topic/game-state")

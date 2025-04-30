@@ -14,7 +14,7 @@ import com.uno.Uno.Dto.PlayerDto;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-@SpringBootTest
+
 public class PlayerMapperTest {
     
     @Test
