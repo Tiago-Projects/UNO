@@ -7,15 +7,25 @@ import com.uno.Uno.Exception.NoCardInDeckException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import lombok.Getter;
+
+
 
 @Getter
 public class DeckModel {
 
     private List<CardModel> deck;
+    private final Random random;
 
     public DeckModel() {
+        this.random = new Random();
+        this.deck = initializeDeck();
+    }
+
+    public DeckModel(Random random) {
+        this.random = random;
         this.deck = initializeDeck();
     }
 
@@ -55,7 +65,7 @@ public class DeckModel {
 
     public CardModel popRandom() {
         if (this.deck.isEmpty()) throw new NoCardInDeckException("No cards in deck");
-        int randomIndex = (int) (Math.random() * this.deck.size());
+        int randomIndex = random.nextInt(this.deckSize());
         return this.deck.remove(randomIndex);
     }
 
