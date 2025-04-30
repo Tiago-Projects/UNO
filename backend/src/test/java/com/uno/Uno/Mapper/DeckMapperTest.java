@@ -24,4 +24,12 @@ public class DeckMapperTest {
         }
     }
 
+    public static void assertDeckDtoEquals(DeckModel model, DeckDto dto) {
+        assertEquals(model.deckSize(), dto.deckSize());
+
+        for (int i = 0; i < dto.deckSize(); i++) {
+            CardMapperTest.assertCardDtoEquals(model.getDeck().get(i), dto.getAllDeck()[i]);
+        }
+    }
+
 }
