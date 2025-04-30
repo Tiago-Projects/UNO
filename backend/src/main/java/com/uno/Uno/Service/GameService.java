@@ -43,7 +43,7 @@ public class GameService {
         
         List<Player> players = new ArrayList<>();
         for (int i = 0; i < NUMBER_PLAYERS; i++) {
-            List<CardModel> initialHand = this.drawCards(deck, NUMBER_INITIAL_CARDS);
+            List<CardModel> initialHand = deck.drawCards(NUMBER_INITIAL_CARDS);
 
             Player player = new BotModel("Bot " + (i + 1), initialHand);
             players.add(player);
@@ -52,16 +52,6 @@ public class GameService {
         this.gameState.setPlayers(players);
         this.gameState.setDeck(deck);
         this.gameState.setCurrentPlayer(players.get(0)); // TODO: change this to randomly select a player
-
-    }
-    
-    private List<CardModel> drawCards(DeckModel deck, int numberCards) {
-        List<CardModel> drawnCards = new ArrayList<>();
-        for (int i = 0; i < numberCards; i++) {
-            drawnCards.add(deck.popRandom());
-        }
-        Collections.sort(drawnCards);
-        return drawnCards;
     }
 
     public void drawCard() {

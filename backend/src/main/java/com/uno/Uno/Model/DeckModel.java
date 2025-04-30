@@ -6,6 +6,7 @@ import com.uno.Uno.Model.Enum.Type;
 import com.uno.Uno.Exception.NoCardInDeckException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -72,5 +73,14 @@ public class DeckModel {
     public CardModel pop() {
         if (this.deck.isEmpty()) throw new NoCardInDeckException("No cards in deck");
         return this.deck.removeFirst();
+    }
+
+    public List<CardModel> drawCards(int numberCards) {
+        List<CardModel> drawnCards = new ArrayList<>();
+        for (int i = 0; i < numberCards; i++) {
+            drawnCards.add(this.popRandom());
+        }
+        Collections.sort(drawnCards);
+        return drawnCards;
     }
 }

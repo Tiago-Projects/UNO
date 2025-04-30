@@ -9,6 +9,7 @@ import com.uno.Uno.Model.Enum.Type;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
 import java.util.Random;
 
 
@@ -77,4 +78,17 @@ class DeckModelTest {
         assertEquals("No cards in deck", exception.getMessage());
     }
 
+
+    @Test
+    void testDrawCards() {
+        Random random = new Random(1);
+        DeckModel deckModel = new DeckModel(random);
+
+        List<CardModel> cards = deckModel.drawCards(3);
+
+        assertEquals(3, cards.size());
+        assertTrue(cards.get(0).compareTo(new CardModel(Type.ONE, Suit.YELLOW)) == 0);
+        assertTrue(cards.get(1).compareTo(new CardModel(Type.WILD, Suit.WILD)) == 0);
+        assertTrue(cards.get(2).compareTo(new CardModel(Type.WILD_DRAW_FOUR, Suit.WILD)) == 0);
+    }
 }
