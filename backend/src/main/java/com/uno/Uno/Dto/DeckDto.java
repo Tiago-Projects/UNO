@@ -12,4 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DeckDto {
     private CardDto[] allDeck;
+
+    public Integer deckSize() {
+        return allDeck.length;
+    }
 }

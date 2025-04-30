@@ -19,8 +19,12 @@ public class CardMapperTest {
 
         CardDto cardDto = CardMapper.toDto(card);
 
-        assertEquals(cardDto.getSuit(), card.getSuit());
-        assertEquals(cardDto.getType(), card.getType());
+        assertCardDtoEquals(card, cardDto);
     } 
 
+
+    public static void assertCardDtoEquals(CardModel card, CardDto dto) {
+        assertEquals(card.getSuit(), dto.getSuit());
+        assertEquals(card.getType(), dto.getType());
+    }
 }
