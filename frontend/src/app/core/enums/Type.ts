@@ -9,8 +9,8 @@ export enum Type {
     SEVEN = "SEVEN",
     EIGHT = "EIGHT",
     NINE = "NINE",
-    REVERSE = "REVERSE",
     SKIP = "SKIP",
+    REVERSE = "REVERSE",
     DRAW_TWO = "DRAW_TWO",
     WILD = "WILD",
     WILD_DRAW_FOUR = "WILD_DRAW_FOUR",
@@ -40,10 +40,10 @@ export namespace Type {
                 return "8";
             case Type.NINE:
                 return "9";
-            case Type.REVERSE:
-                return "Reverse";
             case Type.SKIP:
                 return "Skip";
+            case Type.REVERSE:
+                return "Reverse";
             case Type.DRAW_TWO:
                 return "Draw Two";
             case Type.WILD:
@@ -77,10 +77,10 @@ export namespace Type {
                 return Type.EIGHT;
             case "NINE":
                 return Type.NINE;
-            case "REVERSE":
-                return Type.REVERSE;
             case "SKIP":
                 return Type.SKIP;
+            case "REVERSE":
+                return Type.REVERSE;
             case "DRAW_TWO":
                 return Type.DRAW_TWO;
             case "WILD":
@@ -119,7 +119,7 @@ export namespace Type {
         }
     }
 
-    export function isNumber(type : Type): boolean {
+    export function isNumber(type: Type): boolean {
         return type === Type.ZERO || type === Type.ONE || type === Type.TWO || type === Type.THREE || type === Type.FOUR || type === Type.FIVE || type === Type.SIX || type === Type.SEVEN || type === Type.EIGHT || type === Type.NINE;
     }
 

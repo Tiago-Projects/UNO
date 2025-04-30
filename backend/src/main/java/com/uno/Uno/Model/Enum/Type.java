@@ -12,8 +12,8 @@ public enum Type {
     EIGHT,
     NINE,
     SKIP,
-    DRAW_TWO,
     REVERSE,
+    DRAW_TWO,
     WILD,
     WILD_DRAW_FOUR
 }
