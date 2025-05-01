@@ -1,0 +1,14 @@
+FROM maven:3.9-eclipse-temurin-21 AS build
+
+# Work directory = /app
+WORKDIR /app            
+
+# Copy all files
+COPY .mvn .mvn
+COPY mvnw pom.xml ./
+
+# Dependencies
+RUN ./mvnw dependency:go-offline
+
+# Expose the port of Spring Boot
+EXPOSE 8080
