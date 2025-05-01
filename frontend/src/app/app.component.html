@@ -1,12 +1,4 @@
 <div class="app-wrapper"*ngIf="gameState" style="background-color: red; padding: 10px;">
-    <h1>Game State</h1>
-
-    <h2>Médio:</h2>
-    <app-card [card]="gameState.getTableCard()" [card_dimensions]="getMediumCardDimensions()"></app-card>
-
-    <button (click)="drawCard()">New Card</button>
-
-    <app-player-hand [player]="gameState.getPlayers()[0]"></app-player-hand>
-
+    <app-lobby></app-lobby>
 
 </div>

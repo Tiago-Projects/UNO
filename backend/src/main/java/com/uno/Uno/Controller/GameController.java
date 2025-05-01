@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.uno.Uno.Model.DeckModel;
 import com.uno.Uno.Model.GameStateModel;
-import com.uno.Uno.Service.GameServiceTest;
+import com.uno.Uno.Service.GameService;
 
 
 @Deprecated
@@ -21,7 +21,7 @@ import com.uno.Uno.Service.GameServiceTest;
 public class GameController {
 
     @Autowired
-    private GameServiceTest gameService;
+    private GameService gameService;
 
     @GetMapping("get-deck")
     public ResponseEntity<?> getDeck() {

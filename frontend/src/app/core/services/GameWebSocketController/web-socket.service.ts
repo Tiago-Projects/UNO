@@ -9,19 +9,20 @@ import { Player } from '../../models/Player/player';
 @Injectable({
     providedIn: 'root'
 })
-export class GameWebSocketControllerService {
+export class WebSocketService {
     private client: Client;
-
 
     private gameStateSubject = new BehaviorSubject<GameState | null>(null);
     public gameState$ = this.gameStateSubject.asObservable();
+
+    private playersSubject = new BehaviorSubject<Player[]>([]);
+    public players$ = this.playersSubject.asObservable();
 
     constructor() {
         this.client = new Client({
             brokerURL: 'ws://localhost:8080/ws',
             debug: function (str) {
                 console.log(new Date(), str);
-
             }
         });
         
@@ -32,6 +33,14 @@ export class GameWebSocketControllerService {
                 const gameState: GameState = this.mappingGameState(json);
                 console.log('Received game state:', gameState);
                 this.gameStateSubject.next(gameState);
+            });
+
+            this.client.subscribe('/topic/lobby', (message) => {
+                const json = JSON.parse(message.body);
+
+                const players: Player[] = this.mappingPlayers(json);
+                console.log('Received player list:', players);
+                this.playersSubject.next(players);
             });
 
             this.requestGameState();
@@ -72,10 +81,19 @@ export class GameWebSocketControllerService {
         });
     }
 
+    public sendJoinRequest(playerName: string): void {
+        this.client.publish({
+            destination: '/app/lobby/join',
+            body: JSON.stringify({name: playerName })
+        });
+    }
+
     public disconnect() {
         this.client.deactivate();
         console.log('Disconnected from WebSocket server');
     }
+
+
 
     private mappingGameState(json: any): GameState {
         console.log('Mapping game state:', json.players);
@@ -89,6 +107,14 @@ export class GameWebSocketControllerService {
         var tableCard: Card = new Card(json.tableCard?.suit, json.tableCard?.type);   
 
         return new GameState(deck, players, tableCard);
+    }
+
+    private mappingPlayers(json: any): Player[] {
+        console.log('Mapping players:', json);
+
+        var players: Player[] = json.map((playersJson: any) => new Player(playersJson.name, playersJson.hand.map((cardJson: any) => new Card(cardJson.suit, cardJson.type)))) || [];
+
+        return players;
     }
 }
 

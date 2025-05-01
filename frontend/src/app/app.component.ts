@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { GameWebSocketControllerService } from './core/services/GameWebSocketController/game-web-socket-controller.service';
+import { WebSocketService } from './core/services/GameWebSocketController/web-socket.service';
 import { CardComponent } from './features/card/card.component';
 import { CommonModule } from '@angular/common';
 import { GameState } from './core/models/GameState/game-state';
 import { PlayerHandComponent } from './features/player-hand/player-hand.component';
 import { HttpClient } from '@angular/common/http';
+import { LobbyComponent } from './features/lobby/lobby.component';
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, CardComponent, PlayerHandComponent, CommonModule],
+    imports: [RouterOutlet, CardComponent, PlayerHandComponent, CommonModule, LobbyComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.css'
 })
@@ -20,7 +21,7 @@ export class AppComponent implements OnInit {
     gameState!: GameState;
 
 
-    constructor(private gameWebSocketController: GameWebSocketControllerService, private http: HttpClient) { }
+    constructor(private gameWebSocketController: WebSocketService, private http: HttpClient) { }
 
     ngOnInit(): void {
         this.injectGlobalSvgFilters();          // Inject filters.svg
