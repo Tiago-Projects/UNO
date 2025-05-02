@@ -18,9 +18,11 @@ export class WebSocketService {
     private playersSubject = new BehaviorSubject<Player[]>([]);
     public players$ = this.playersSubject.asObservable();
 
+
     constructor() {
+
         this.client = new Client({
-            brokerURL: 'ws://localhost:8080/ws',
+            brokerURL: `ws://${window.location.hostname}:8080/ws`,
             debug: function (str) {
                 console.log(new Date(), str);
             }

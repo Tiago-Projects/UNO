@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
 import com.uno.Uno.Model.Player;
@@ -19,7 +20,9 @@ public class LobbyController {
 
     @MessageMapping("lobby/join")
     @SendTo("/topic/lobby")
-    public List<Player> joinLobby(JoinRequest request) {
+    public List<Player> joinLobby(JoinRequest request, SimpMessageHeaderAccessor headerAccessor) {
+        String sessionId = headerAccessor.getSessionId();
+        System.out.println(sessionId);
         lobbyService.addPlayer(request.getName());
 
         return lobbyService.getPlayers();
