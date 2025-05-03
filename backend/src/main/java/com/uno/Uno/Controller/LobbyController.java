@@ -21,8 +21,8 @@ public class LobbyController {
     private LobbyService lobbyService;
 
     @MessageMapping("/lobby/join")
-    public void joinLobby(SimpMessageHeaderAccessor headerAccessor, JoinRequest request) {
-        lobbyService.addPlayer(headerAccessor.getSessionId(), request.getName());
+    public void joinLobby(JoinRequest request) {
+        lobbyService.addPlayer(request.getPlayerId(), request.getName());
     }
 
     @MessageMapping("/lobby/getPlayers")
@@ -33,12 +33,14 @@ public class LobbyController {
 
     @MessageMapping("/lobby/check-connection")
     @SendTo("/topic/lobby/check-connection")
-    public boolean checkConnection(SimpMessageHeaderAccessor headerAccessor) {
-        return lobbyService.checkConnection(headerAccessor.getSessionId());
+    public boolean checkConnection(String playerId) {
+        System.out.println(playerId);
+        return lobbyService.checkConnection(playerId);
     }
 
     @Data
     public static class JoinRequest {
         private String name;
+        private String playerId;
     }
 }

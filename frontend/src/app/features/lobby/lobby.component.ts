@@ -18,11 +18,17 @@ export class LobbyComponent {
     constructor(private lobbyService: LobbyService) {
         this.lobbyService.connect();
 
+        this.lobbyService.isConnected$.subscribe((connected) => {
+            if (connected) {
+                this.lobbyService.getPlayers();
+            }
+        });
+
         this.lobbyService.players$.subscribe((players) => {
             if (players) {
                 this.players = players;
                 console.log('Players updated: ', this.players);
             }
         });
-    }
+    }   
 }
