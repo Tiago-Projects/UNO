@@ -13,6 +13,9 @@ export class LobbyService {
     private playersSubject = new BehaviorSubject<Player[]>([]);
     public players$ = this.playersSubject.asObservable();
 
+    private playerConnectionSubject = new BehaviorSubject<boolean>(false);
+    public playersConnection$ = this.playerConnectionSubject.asObservable();
+
     constructor() { 
         this.client = new Client({
             brokerURL: `ws://${window.location.hostname}:8080/ws`,
@@ -33,6 +36,12 @@ export class LobbyService {
             // Subscribe to add players
             this.client.subscribe('/topic/lobby/join', () => {
                 console.log("Join");
+            });
+
+            // Subscribe to check connection
+            this.client.subscribe('/topic/lobby/check-connection', (message) => {
+                const json = JSON.parse(message.body);
+                console.log(json);
             });
         }
 
@@ -63,6 +72,13 @@ export class LobbyService {
     public getPlayers(): void {
         this.client.publish({
             destination: '/app/lobby/getPlayers',
+            body: ''
+        });
+    }
+
+    public checkConnection(): void {
+        this.client.publish({
+            destination: '/app/lobby/check-connection',
             body: ''
         });
     }

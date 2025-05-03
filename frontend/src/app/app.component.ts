@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { CardComponent } from './features/card/card.component';
 import { CommonModule } from '@angular/common';
 import { GameState } from './core/models/GameState/game-state';
@@ -7,6 +7,7 @@ import { PlayerHandComponent } from './features/player-hand/player-hand.componen
 import { HttpClient } from '@angular/common/http';
 import { HomeComponent } from './features/home/home.component';
 import { WebSocketService } from './core/services/web-socket.service';
+import { LobbyService } from './core/services/lobby-service.service';
 
 @Component({
     selector: 'app-root',
@@ -20,17 +21,26 @@ export class AppComponent implements OnInit {
     title = 'UNO';
     gameState!: GameState;
 
+    constructor(private gameWebSocketController: WebSocketService, private lobbyService: LobbyService, private http: HttpClient, private router: Router) {
 
-    constructor(private gameWebSocketController: WebSocketService, private http: HttpClient) { }
+    }
 
     ngOnInit(): void {
         this.injectGlobalSvgFilters();          // Inject filters.svg
+
         this.gameWebSocketController.connect();
+        this.lobbyService.connect();
 
         this.gameWebSocketController.gameState$.subscribe((gameState) => {
             if (gameState) {
                 this.gameState = gameState;
                 console.log('Game state updated:', this.gameState);
+            }
+        });
+
+        this.lobbyService.playersConnection$.subscribe((connected) => {
+            if (!connected && this.router.url !== '/home') {
+                this.router.navigate(['/home']);
             }
         });
     }
@@ -42,25 +52,4 @@ export class AppComponent implements OnInit {
             document.body.insertBefore(div, document.body.firstChild);
         });
     }
-
-
-    drawCard() {
-        this.gameWebSocketController.drawCard();
-    }
-
-
-
-    getSmallestCardDimensions(): { width: string, height: string } {
-        return { width: "65px", height: "105px" };
-    }
-
-    getMediumCardDimensions(): { width: string, height: string } {
-        return { width: "130px", height: "210px" };
-    }
-
-    getBiggestCardDimensions(): { width: string, height: string } {
-        return { width: "260px", height: "420px" };
-    }
-
-
 }

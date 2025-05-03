@@ -31,6 +31,12 @@ public class LobbyController {
         return lobbyService.getPlayers().stream().map(PlayerMapper::toDto).toList();
     }
 
+    @MessageMapping("/lobby/check-connection")
+    @SendTo("/topic/lobby/check-connection")
+    public boolean checkConnection(SimpMessageHeaderAccessor headerAccessor) {
+        return lobbyService.checkConnection(headerAccessor.getSessionId());
+    }
+
     @Data
     public static class JoinRequest {
         private String name;
