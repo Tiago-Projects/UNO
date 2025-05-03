@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Player } from '../../core/models/Player/player';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { LobbyService } from '../../core/services/lobby-service.service';
 
 
 @Component({
@@ -12,9 +13,16 @@ import { CommonModule } from '@angular/common';
   styleUrl: './lobby.component.css'
 })
 export class LobbyComponent {
-    playerName: string = "";
-    playersInRoom: Player[] = [];
+    players!: Player[];
 
-    constructor() {
+    constructor(private lobbyService: LobbyService) {
+        this.lobbyService.connect();
+
+        this.lobbyService.players$.subscribe((players) => {
+            if (players) {
+                this.players = players;
+                console.log('Players updated: ', this.players);
+            }
+        });
     }
 }

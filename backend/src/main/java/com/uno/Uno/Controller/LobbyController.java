@@ -8,23 +8,28 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
-import com.uno.Uno.Model.Player;
+import com.uno.Uno.Dto.PlayerDto;
+import com.uno.Uno.Mapper.PlayerMapper;
 import com.uno.Uno.Service.LobbyService;
 
 import lombok.Data;
+
 
 @Controller
 public class LobbyController {
     @Autowired
     private LobbyService lobbyService;
 
-    @MessageMapping("lobby/join")
-    @SendTo("/topic/lobby")
-    public List<Player> joinLobby(SimpMessageHeaderAccessor headerAccessor, JoinRequest request) {
+    @MessageMapping("/lobby/join")
+    public void joinLobby(SimpMessageHeaderAccessor headerAccessor, JoinRequest request) {
         lobbyService.addPlayer(headerAccessor.getSessionId(), request.getName());
-        return lobbyService.getPlayers();
     }
 
+    @MessageMapping("/lobby/getPlayers")
+    @SendTo("/topic/lobby/getPlayers")
+    public List<PlayerDto> getPlayers() {
+        return lobbyService.getPlayers().stream().map(PlayerMapper::toDto).toList();
+    }
 
     @Data
     public static class JoinRequest {
