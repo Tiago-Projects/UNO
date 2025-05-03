@@ -31,4 +31,8 @@ public class LobbyService {
     public List<Player> getPlayers() {
         return playersConnected;
     }
+
+    public boolean checkConnection(String sessionId) {
+        return playersConnected.stream().anyMatch(p -> p.getSessionId().equals(sessionId));
+    }
 }

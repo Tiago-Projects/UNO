@@ -14,7 +14,9 @@ import { FormsModule } from '@angular/forms';
 export class HomeComponent {
     playerName: string = "";
 
-    constructor(private lobbyService: LobbyService, private router: Router) {}
+    constructor(private lobbyService: LobbyService, private router: Router) {
+        lobbyService.connect();
+    }
 
     public connect(): void {
         if (!this.playerName.trim()) return;

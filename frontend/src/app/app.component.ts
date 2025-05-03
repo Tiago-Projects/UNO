@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { GameState } from './core/models/GameState/game-state';
 import { HttpClient } from '@angular/common/http';
 import { WebSocketService } from './core/services/web-socket.service';
+import { LobbyService } from './core/services/lobby-service.service';
 
 @Component({
     selector: 'app-root',
@@ -17,16 +18,24 @@ export class AppComponent implements OnInit {
     title = 'UNO';
     gameState!: GameState;
 
-    constructor(private gameWebSocketController: WebSocketService, private http: HttpClient) { }
+    constructor(private gameWebSocketController: WebSocketService, private lobbyService: LobbyService, private http: HttpClient, private router: Router) {}
 
     ngOnInit(): void {
         this.injectGlobalSvgFilters();          // Inject filters.svg
+
         this.gameWebSocketController.connect();
+        this.lobbyService.connect();
 
         this.gameWebSocketController.gameState$.subscribe((gameState) => {
             if (gameState) {
                 this.gameState = gameState;
                 console.log('Game state updated:', this.gameState);
+            }
+        });
+
+        this.lobbyService.playersConnection$.subscribe((connected) => {
+            if (!connected && this.router.url !== '/home') {
+                this.router.navigate(['/home']);
             }
         });
     }
@@ -38,5 +47,4 @@ export class AppComponent implements OnInit {
             document.body.insertBefore(div, document.body.firstChild);
         });
     }
-
 }

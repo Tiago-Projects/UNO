@@ -15,19 +15,14 @@ export class WebSocketService {
     private gameStateSubject = new BehaviorSubject<GameState | null>(null);
     public gameState$ = this.gameStateSubject.asObservable();
 
-    private playersSubject = new BehaviorSubject<Player[]>([]);
-    public players$ = this.playersSubject.asObservable();
-
-
     constructor() {
-
         this.client = new Client({
             brokerURL: `ws://${window.location.hostname}:8080/ws`,
             reconnectDelay: 5000,
         });
         
         this.client.onConnect = (frame) => {
-            console.log('Connected: ' + frame);
+            console.log('Game Connected: ' + frame);
             this.client.subscribe('/topic/game-state', (message) => {
                 const json = JSON.parse(message.body);
                 const gameState: GameState = this.mappingGameState(json);
@@ -35,15 +30,6 @@ export class WebSocketService {
                 this.gameStateSubject.next(gameState);
             });
 
-            this.client.subscribe('/topic/lobby', (message) => {
-                const json = JSON.parse(message.body);
-
-                const players: Player[] = this.mappingPlayers(json);
-                console.log('Received player list:', players);
-                this.playersSubject.next(players);
-            });
-
-            this.requestGameState();
         }
 
         this.client.onWebSocketError = (error) => {
@@ -59,12 +45,6 @@ export class WebSocketService {
 
     public connect() {
         this.client.activate();
-    }
-
-    public subscribeToGameState() {
-        this.client.subscribe('/topic/game-state', (message: IMessage) => {
-            console.log('Received game state:', message.body);
-        });
     }
 
     public requestGameState() {
@@ -86,8 +66,6 @@ export class WebSocketService {
         console.log('Disconnected from WebSocket server');
     }
 
-
-
     private mappingGameState(json: any): GameState {
         console.log('Mapping game state:', json.players);
         // Mapping deck
@@ -102,13 +80,6 @@ export class WebSocketService {
         return new GameState(deck, players, tableCard);
     }
 
-    private mappingPlayers(json: any): Player[] {
-        console.log('Mapping players:', json);
-
-        var players: Player[] = json.map((playersJson: any) => new Player(playersJson.name, playersJson.hand.map((cardJson: any) => new Card(cardJson.suit, cardJson.type)))) || [];
-
-        return players;
-    }
 }
 
 
