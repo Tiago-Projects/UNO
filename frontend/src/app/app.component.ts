@@ -9,6 +9,8 @@ import { HomeComponent } from './features/home/home.component';
 import { WebSocketService } from './core/services/web-socket.service';
 import { LobbyService } from './core/services/lobby-service.service';
 
+import {filter, switchMap, take} from 'rxjs/operators';
+
 @Component({
     selector: 'app-root',
     standalone: true,
@@ -16,16 +18,12 @@ import { LobbyService } from './core/services/lobby-service.service';
     templateUrl: './app.component.html',
     styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
 
     title = 'UNO';
     gameState!: GameState;
 
     constructor(private gameWebSocketController: WebSocketService, private lobbyService: LobbyService, private http: HttpClient, private router: Router) {
-
-    }
-
-    ngOnInit(): void {
         this.injectGlobalSvgFilters();          // Inject filters.svg
 
         this.gameWebSocketController.connect();
@@ -38,11 +36,22 @@ export class AppComponent implements OnInit {
             }
         });
 
-        this.lobbyService.playersConnection$.subscribe((connected) => {
+        
+
+        setTimeout(() => this.lobbyService.checkConnection(), 100);
+        this.lobbyService.isConnected$.pipe(
+            filter(connected => connected),
+            take(1),
+            switchMap(() => {
+                this.lobbyService.checkConnection();
+                return this.lobbyService.isConnected$;
+            })
+        ).subscribe((connected) => {
             if (!connected && this.router.url !== '/home') {
                 this.router.navigate(['/home']);
             }
         });
+        
     }
     
     private injectGlobalSvgFilters(): void {

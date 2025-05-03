@@ -13,8 +13,8 @@ export class LobbyService {
     private playersSubject = new BehaviorSubject<Player[]>([]);
     public players$ = this.playersSubject.asObservable();
 
-    private playerConnectionSubject = new BehaviorSubject<boolean>(false);
-    public playersConnection$ = this.playerConnectionSubject.asObservable();
+    private isConnectedSubject = new BehaviorSubject<boolean>(false);
+    public isConnected$ = this.isConnectedSubject.asObservable();
 
     constructor() { 
         this.client = new Client({
@@ -24,6 +24,7 @@ export class LobbyService {
 
         this.client.onConnect = (frame) => {
             console.log('Lobby Connected: ' + frame);
+            this.isConnectedSubject.next(true);
 
             // Subscribe to get players
             this.client.subscribe('/topic/lobby/getPlayers', (message) => {
@@ -40,8 +41,7 @@ export class LobbyService {
 
             // Subscribe to check connection
             this.client.subscribe('/topic/lobby/check-connection', (message) => {
-                const json = JSON.parse(message.body);
-                console.log(json);
+                this.isConnectedSubject.next(message.body === "true");
             });
         }
 
@@ -61,12 +61,15 @@ export class LobbyService {
     }
 
     public joinLobby(name: string): void {
+        const playerId = this.getOrCreatePlayerId();
+        console.log(playerId);
+
         this.client.publish({
             destination: '/app/lobby/join',
-            body: JSON.stringify({name: name })
+            body: JSON.stringify({ name: name, playerId: playerId })
         });
 
-        setTimeout(() => this.getPlayers(), 500);
+        setTimeout(() => this.getPlayers(), 100);
     }
 
     public getPlayers(): void {
@@ -77,9 +80,11 @@ export class LobbyService {
     }
 
     public checkConnection(): void {
+        const playerId = this.getOrCreatePlayerId();
+        console.log(playerId);
         this.client.publish({
             destination: '/app/lobby/check-connection',
-            body: ''
+            body: playerId
         });
     }
 
@@ -90,5 +95,22 @@ export class LobbyService {
         var players: Player[] = json.map((playersJson: any) => new Player(playersJson.name, playersJson.hand.map((cardJson: any) => new Card(cardJson.suit, cardJson.type)))) || [];
 
         return players;
+    }
+
+    private getOrCreatePlayerId(): string {
+        const storedId = localStorage.getItem('playerId');
+        if (storedId) return storedId;
+
+        const newId = this.fallbackUUID();
+        localStorage.setItem('playerId', newId);
+        return newId;
+    }
+    
+    private fallbackUUID(): string {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            const r = Math.random() * 16 | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
     }
 }
