@@ -1,17 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { CardComponent } from './features/card/card.component';
 import { CommonModule } from '@angular/common';
 import { GameState } from './core/models/GameState/game-state';
-import { PlayerHandComponent } from './features/player-hand/player-hand.component';
 import { HttpClient } from '@angular/common/http';
-import { HomeComponent } from './features/home/home.component';
 import { WebSocketService } from './core/services/web-socket.service';
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, CardComponent, PlayerHandComponent, CommonModule, HomeComponent],
+    imports: [RouterOutlet, CommonModule],
     templateUrl: './app.component.html',
     styleUrl: './app.component.css'
 })
@@ -19,7 +16,6 @@ export class AppComponent implements OnInit {
 
     title = 'UNO';
     gameState!: GameState;
-
 
     constructor(private gameWebSocketController: WebSocketService, private http: HttpClient) { }
 
@@ -42,25 +38,5 @@ export class AppComponent implements OnInit {
             document.body.insertBefore(div, document.body.firstChild);
         });
     }
-
-
-    drawCard() {
-        this.gameWebSocketController.drawCard();
-    }
-
-
-
-    getSmallestCardDimensions(): { width: string, height: string } {
-        return { width: "65px", height: "105px" };
-    }
-
-    getMediumCardDimensions(): { width: string, height: string } {
-        return { width: "130px", height: "210px" };
-    }
-
-    getBiggestCardDimensions(): { width: string, height: string } {
-        return { width: "260px", height: "420px" };
-    }
-
 
 }
