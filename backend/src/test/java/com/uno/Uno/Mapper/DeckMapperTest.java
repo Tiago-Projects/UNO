@@ -1,7 +1,6 @@
 package com.uno.Uno.Mapper;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import com.uno.Uno.Dto.DeckDto;
 import com.uno.Uno.Model.DeckModel;

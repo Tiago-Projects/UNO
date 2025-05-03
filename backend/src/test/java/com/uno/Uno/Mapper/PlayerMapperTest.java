@@ -1,7 +1,6 @@
 package com.uno.Uno.Mapper;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import com.uno.Uno.Model.CardModel;
 import com.uno.Uno.Model.Player;
@@ -14,12 +13,11 @@ import com.uno.Uno.Dto.PlayerDto;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-
 public class PlayerMapperTest {
     
     @Test
     void testToDtoBot() {
-        Player bot = new BotModel("Bot 1");
+        Player bot = new BotModel("BotID", "Bot");
 
         CardModel card1 = new CardModel(Type.FOUR, Suit.RED);
         CardModel card2 = new CardModel(Type.WILD, Suit.WILD);
@@ -36,7 +34,7 @@ public class PlayerMapperTest {
 
     @Test
     void testToDtoPlayer() {
-        Player player = new PlayerModel("Bot 1");
+        Player player = new PlayerModel("PlayerID", "Player");
 
         CardModel card1 = new CardModel(Type.FOUR, Suit.RED);
         CardModel card2 = new CardModel(Type.WILD, Suit.WILD);

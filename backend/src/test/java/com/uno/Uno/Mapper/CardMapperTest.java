@@ -3,7 +3,6 @@ package com.uno.Uno.Mapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import com.uno.Uno.Dto.CardDto;
 import com.uno.Uno.Model.CardModel;
