@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { WebSocketService } from './core/services/GameWebSocketController/web-socket.service';
 import { CardComponent } from './features/card/card.component';
 import { CommonModule } from '@angular/common';
 import { GameState } from './core/models/GameState/game-state';
 import { PlayerHandComponent } from './features/player-hand/player-hand.component';
 import { HttpClient } from '@angular/common/http';
-import { LobbyComponent } from './features/lobby/lobby.component';
+import { HomeComponent } from './features/home/home.component';
+import { WebSocketService } from './core/services/web-socket.service';
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, CardComponent, PlayerHandComponent, CommonModule, LobbyComponent],
+    imports: [RouterOutlet, CardComponent, PlayerHandComponent, CommonModule, HomeComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.css'
 })

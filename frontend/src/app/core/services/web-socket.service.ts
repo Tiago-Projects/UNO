@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Client, IMessage } from '@stomp/stompjs';
-import { GameState } from '../../models/GameState/game-state';
+import { GameState } from '../models/GameState/game-state';
 import { BehaviorSubject } from 'rxjs';
 
-import { Card } from '../../models/card/card';
-import { Player } from '../../models/Player/player';
+import { Card } from '../models/card/card';
+import { Player } from '../models/Player/player';
 
 @Injectable({
     providedIn: 'root'
@@ -23,9 +23,7 @@ export class WebSocketService {
 
         this.client = new Client({
             brokerURL: `ws://${window.location.hostname}:8080/ws`,
-            debug: function (str) {
-                console.log(new Date(), str);
-            }
+            reconnectDelay: 5000,
         });
         
         this.client.onConnect = (frame) => {
@@ -80,13 +78,6 @@ export class WebSocketService {
         this.client.publish({
             destination: '/app/draw-card',
             body: ''
-        });
-    }
-
-    public sendJoinRequest(playerName: string): void {
-        this.client.publish({
-            destination: '/app/lobby/join',
-            body: JSON.stringify({name: playerName })
         });
     }
 

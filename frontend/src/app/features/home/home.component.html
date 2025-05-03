@@ -1,0 +1,11 @@
+<div class="home-container">
+    <h1 class="home-title"> Bem-vindo ao UNO </h1>
+    <div class="home-input">
+        <label class="home-input-text"> Escolhe um nickname para <br> poderes entrar na sala. </label>
+        <input class="home-input-input" type="text" placeholder="Insere o teu nickname" [(ngModel)]="playerName" />
+    </div>
+
+    <div class="home-button-div">
+        <button class="home-button" (click)="connect()"> Entrar na Sala </button>
+    </div>
+</div>

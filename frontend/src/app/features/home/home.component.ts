@@ -1,0 +1,24 @@
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { LobbyService } from '../../core/services/lobby-service.service';
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-home',
+  standalone: true,
+  imports: [FormsModule, CommonModule],
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.css'
+})
+export class HomeComponent {
+    playerName: string = "";
+
+    constructor(private lobbyService: LobbyService, private router: Router) {}
+
+    public connect(): void {
+        if (!this.playerName.trim()) return;
+        this.lobbyService.joinLobby(this.playerName);
+        this.router.navigate(['/lobby']);
+    }
+}
