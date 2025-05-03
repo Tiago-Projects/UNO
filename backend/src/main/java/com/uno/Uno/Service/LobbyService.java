@@ -17,9 +17,7 @@ public class LobbyService {
         if (players.stream().anyMatch(p -> p.getSessionId().equals(sessionId))) {
             throw new PlayerAlreadyConnected("Player " + sessionId + " with name '" + name + "' already connected.");
         }
-        if (players.stream().noneMatch(p -> p.getSessionId().equals(sessionId))) {
-            players.add(new PlayerModel(sessionId, name));
-        }
+        players.add(new PlayerModel(sessionId, name));
     }
 
     public void removePlayer(String sessionId) {
