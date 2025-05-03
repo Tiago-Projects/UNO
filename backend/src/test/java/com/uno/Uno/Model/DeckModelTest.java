@@ -1,7 +1,6 @@
 package com.uno.Uno.Model;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import com.uno.Uno.Exception.NoCardInDeckException;
 import com.uno.Uno.Model.Enum.Suit;
