@@ -6,11 +6,11 @@ import java.util.List;
 
 public class BotModel extends Player {
     
-    public BotModel(String name) {
-        super(name, new ArrayList<>());
+    public BotModel(String sessionId, String name) {
+        super(sessionId, name, new ArrayList<>());
     }
 
-    public BotModel(String name, List<CardModel> hand) {
-        super(name, hand);
+    public BotModel(String sessionId, String name, List<CardModel> hand) {
+        super(sessionId, name, hand);
     }
 }       

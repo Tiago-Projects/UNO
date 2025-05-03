@@ -20,11 +20,8 @@ public class LobbyController {
 
     @MessageMapping("lobby/join")
     @SendTo("/topic/lobby")
-    public List<Player> joinLobby(JoinRequest request, SimpMessageHeaderAccessor headerAccessor) {
-        String sessionId = headerAccessor.getSessionId();
-        System.out.println(sessionId);
-        lobbyService.addPlayer(request.getName());
-
+    public List<Player> joinLobby(SimpMessageHeaderAccessor headerAccessor, JoinRequest request) {
+        lobbyService.addPlayer(headerAccessor.getSessionId(), request.getName());
         return lobbyService.getPlayers();
     }
 

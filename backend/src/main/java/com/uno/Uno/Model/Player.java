@@ -12,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class Player {
+    String sessionId;
     String name;
     List<CardModel> hand;
 

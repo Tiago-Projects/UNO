@@ -45,7 +45,7 @@ public class GameService {
         for (int i = 0; i < NUMBER_PLAYERS; i++) {
             List<CardModel> initialHand = deck.drawCards(NUMBER_INITIAL_CARDS);
 
-            Player player = new BotModel("Bot " + (i + 1), initialHand);
+            Player player = new BotModel("Bot " + (i + 1), "Bot " + (i + 1), initialHand);
             players.add(player);
         }
 
