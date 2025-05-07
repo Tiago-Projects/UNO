@@ -1,0 +1,55 @@
+.lobby-container {
+    display: flex;  
+    flex-direction: row;
+
+    width: 100vw;
+    height: 100vh;
+}
+
+.title {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.lobby {
+    display: flex;
+
+    width: 75%;
+
+    background-color: aqua;
+}
+
+
+
+
+
+.players {
+    display: flex;
+    flex-direction: column;
+
+    width: 25%;
+
+}
+
+
+.players-player {
+    width: 75%;
+    height: 5%;
+
+    display: flex;
+    
+    align-items: center;
+
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: start;
+    margin-bottom: 10px;
+    padding: 15px;
+
+    background-color: rgba(255, 0, 0, 0.3);
+
+    border: solid red 2px;
+    border-radius: 15px;
+
+    font-size: larger;
+}

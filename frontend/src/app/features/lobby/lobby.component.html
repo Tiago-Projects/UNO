@@ -1,6 +1,16 @@
 <div class="lobby-container"> 
-    <h2> Lobby </h2>
-    <h3> Players: </h3>
+    <div class="lobby">
+        <h1 class="title"> Lobby </h1>
 
-    {{ players }}
+        
+
+    </div>
+
+    <div class="players">
+        <h1 class="title"> Players </h1>
+        <div *ngFor="let player of players; let i = index" class="players-player"> 
+            {{ player.getName() }}
+        </div>
+    </div>
+
 </div>
