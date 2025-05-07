@@ -13,7 +13,10 @@ import { LobbyService } from '../../core/services/lobby-service.service';
   styleUrl: './lobby.component.css'
 })
 export class LobbyComponent {
-    players!: Player[];
+    connectedPlayers!: (Player | null)[];
+    playerInLobby!: (Player | null)[];
+    slotCount:number = 4;
+
 
     constructor(private lobbyService: LobbyService) {
         this.lobbyService.connect();
@@ -25,11 +28,36 @@ export class LobbyComponent {
             }
         });
 
-        this.lobbyService.players$.subscribe((players) => {
+        this.lobbyService.playersConnected$.subscribe((players) => {
             if (players) {
-                this.players = players;
-                console.log('Players updated: ', this.players);
+                this.connectedPlayers = players;
+                console.log('Connected players updated: ', this.connectedPlayers);
             }
         });
-    }   
+
+        this.lobbyService.playerInLobby$.subscribe((players) => {
+            if(players) {
+                this.playerInLobby = players;
+                console.log("Players in lobby updated: ", this.playerInLobby)
+            }
+        }) ;
+    }  
+    
+
+    public getPlayerAt(index: number): Player | null {
+        return this.playerInLobby?.[index] ?? null;
+    }
+
+    public isPlayerInLobby(index: number): boolean {
+        return false; // TODO: check if player is already on lobby or not.
+    }
+
+    public addPlayerToSlot(index: number): void {
+        this.lobbyService.joinPlayerSlot(index);
+    }
+
+    public addBot(): void {
+        // TODO: Add bot
+        return;
+    }
 }

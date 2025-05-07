@@ -1,6 +1,5 @@
 package com.uno.Uno.Controller;
 
-import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -25,7 +24,7 @@ public class GameWebSocketController {
 
     @MessageMapping("/draw-card")
     @SendTo("/topic/game-state")
-    public GameStateDto drawCard(Principal principal) throws Exception {
+    public GameStateDto drawCard() throws Exception {
         gameService.drawCard();
         return GameStateMapper.toDto(gameService.getGameState());
     }

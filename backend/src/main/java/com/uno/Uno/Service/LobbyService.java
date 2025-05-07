@@ -1,5 +1,7 @@
 package com.uno.Uno.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -13,7 +15,8 @@ import com.uno.Uno.Model.PlayerModel;
 @Service
 public class LobbyService {
     private final List<Player> playersConnected = new CopyOnWriteArrayList<>();
-    private final List<Player> playersInLobby = new CopyOnWriteArrayList<>();
+    private final List<Player> playersInLobby = new ArrayList<>(Collections.nCopies(4, null));
+
 
     public void addPlayer(String UUID, String name) {
         if (playersConnected.stream().anyMatch(p -> p.getUUID().equals(UUID))) {
@@ -40,14 +43,15 @@ public class LobbyService {
     }
 
     public boolean checkConnection(String UUID) {
-        return playersConnected.stream().anyMatch(p -> p.getUUID().equals(UUID));
+        return playersConnected.stream().anyMatch(p -> p.getUUID().equals(UUID)) || playersInLobby.stream().anyMatch(p -> p.getUUID().equals(UUID));
     }
 
-    public void addPlayerToLobby(String UUID) {
+    public void addPlayerToLobby(String UUID, Integer slot) {
+        System.out.println(UUID);
         if (playersConnected.stream().noneMatch(p -> p.getUUID().equals(UUID))) {
             throw new NoPlayerConnectedWithUUID("Player " + UUID + " is not connected.");
         }
         Player player = removeConnectedPlayer(UUID);
-        playersInLobby.add(player);
+        playersInLobby.set(slot, player);
     }
 }

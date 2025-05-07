@@ -1,5 +1,7 @@
 package com.uno.Uno.Dto;
 
+import com.uno.Uno.Model.Player;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

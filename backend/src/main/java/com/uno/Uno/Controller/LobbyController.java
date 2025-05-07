@@ -7,8 +7,10 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.uno.Uno.Dto.PlayerDto;
 import com.uno.Uno.Mapper.PlayerMapper;
+import com.uno.Uno.Model.Player;
 import com.uno.Uno.Service.LobbyService;
 
 import lombok.Data;
@@ -33,7 +35,9 @@ public class LobbyController {
     @MessageMapping("/lobby/getPlayersInLobby")
     @SendTo("/topic/lobby/getPlayersInLobby")
     public List<PlayerDto> getPlayersInLobby() {
-        return lobbyService.getPlayersInLobby().stream().map(PlayerMapper::toDto).toList();
+        return lobbyService.getPlayersInLobby().stream()
+            .map(player -> player != null ? PlayerMapper.toDto(player) : null)
+            .toList();
     }
 
     @MessageMapping("/lobby/check-connection")
@@ -44,13 +48,20 @@ public class LobbyController {
 
     @MessageMapping("/lobby/addPlayerToLobby")
     @SendTo("/topic/lobby/addPlayerToLobby")
-    public void addPlayerToLobby(String UUID) {
-        lobbyService.addPlayerToLobby(UUID); 
+    public void addPlayerToLobby(PlayerInSlot playerInSlot) {
+        lobbyService.addPlayerToLobby(playerInSlot.getUUID(), playerInSlot.getSlot()); 
     }
 
     @Data
     public static class JoinRequest {
         private String name;
         private String playerId;
+    }
+
+    @Data 
+    public static class PlayerInSlot {
+        @JsonProperty("UUID")
+        private String UUID;
+        private Integer slot;
     }
 }

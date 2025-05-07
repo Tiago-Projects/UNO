@@ -10,13 +10,13 @@ import { Card } from '../models/card/card';
 export class LobbyService {
     private client: Client;
 
-    private playersSubject = new BehaviorSubject<Player[]>([]);
-    public players$ = this.playersSubject.asObservable();
+    private playersConnectedSubject = new BehaviorSubject<(Player | null)[]>([]);
+    public playersConnected$ = this.playersConnectedSubject.asObservable();
 
     private isConnectedSubject = new BehaviorSubject<boolean>(false);
     public isConnected$ = this.isConnectedSubject.asObservable();
 
-    private playerInLobbySubject = new BehaviorSubject<boolean>(false);
+    private playerInLobbySubject = new BehaviorSubject<(Player | null)[]>([]);
     public playerInLobby$ = this.playerInLobbySubject.asObservable();
 
     constructor() { 
@@ -29,12 +29,20 @@ export class LobbyService {
             console.log('Lobby Connected: ' + frame);
             this.isConnectedSubject.next(true);
 
-            // Subscribe to get players
+            // Subscribe to get connected players
             this.client.subscribe('/topic/lobby/getConnectedPlayers', (message) => {
                 const json = JSON.parse(message.body);
-                const players: Player[] = this.mappingPlayers(json);
+                const players: (Player | null)[] = this.mappingPlayers(json);
                 console.log('Received player list:', players);
-                this.playersSubject.next(players);
+                this.playersConnectedSubject.next(players);
+            });
+
+            // Subscribe to get players
+            this.client.subscribe('/topic/lobby/getPlayersInLobby', (message) => {
+                const json = JSON.parse(message.body);
+                const players: (Player | null)[] = this.mappingPlayers(json);
+                console.log('Received player list:', players);
+                this.playerInLobbySubject.next(players);
             });
 
             // Subscribe to add connected players
@@ -48,7 +56,7 @@ export class LobbyService {
             });
 
             // Subscribe to add player to lobby
-            this.client.subscribe('/topic/lobbyaddPlayerToLobby', () => {
+            this.client.subscribe('/topic/lobby/addPlayerToLobby', () => {
                 console.log("Add player to lobby.");
             });
         }
@@ -82,12 +90,12 @@ export class LobbyService {
     }
 
     public addPlayerToLobby(): void {
-        const UUDI = this.getPlayerId();
-        if (!UUDI) return;
+        const UUID = this.getPlayerId();
+        if (!UUID) return;
 
         this.client.publish({
             destination: '/app/lobby/joinConnected',
-            body: JSON.stringify({UUID: UUDI})
+            body: JSON.stringify({UUID: UUID})
         });
 
         setTimeout(() => this.getConnectedPlayers(), 100);
@@ -116,11 +124,39 @@ export class LobbyService {
         });
     }
 
+    public joinPlayerSlot(slot: number): void {
+        this.client.publish({
+            destination: '/app/lobby/addPlayerToLobby',
+            body: JSON.stringify({UUID: this.getPlayerId(), slot: slot})
+        });
+
+        setTimeout(() => this.getConnectedPlayers(), 100);
+        setTimeout(() => this.getPlayersInLobby(), 100);
+    }
+
     
-    private mappingPlayers(json: any): Player[] {
+    private mappingPlayers(json: any): (Player | null)[] {
         console.log('Mapping players:', json);
 
-        var players: Player[] = json.map((playersJson: any) => new Player(playersJson.name, playersJson.hand.map((cardJson: any) => new Card(cardJson.suit, cardJson.type)))) || [];
+        if (!Array.isArray(json)) {
+            return [];
+        }
+
+        const players: (Player | null)[] = json.map((playerJson: any) => {
+
+            if (!playerJson?.name) return null;
+
+            const name = playerJson?.name ?? 'Unknown';
+            const handJson = Array.isArray(playerJson?.hand) ? playerJson.hand : [];
+            
+            const hand = handJson.map((cardJson: any) => {
+                const suit = cardJson?.suit ?? 'UNKNOWN';
+                const type = cardJson?.suit ?? 'UNKNOWN';
+                return new Card(suit, type);
+            })
+
+            return new Player(name, hand);
+        });
 
         return players;
     }
@@ -134,10 +170,8 @@ export class LobbyService {
         return newId;
     }
 
-    private getPlayerId(): string | undefined {
-        const storedId = localStorage.getItem('playerId');
-        if (storedId) return storedId;
-        return undefined;
+    public getPlayerId(): string | null {
+        return localStorage.getItem('playerId');
     }
     
     private fallbackUUID(): string {
