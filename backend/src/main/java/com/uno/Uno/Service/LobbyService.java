@@ -5,7 +5,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.springframework.stereotype.Service;
 
-import com.uno.Uno.Exception.NoPlayerConnectedWithSessionId;
+import com.uno.Uno.Exception.NoPlayerConnectedWithUUID;
 import com.uno.Uno.Exception.PlayerAlreadyConnected;
 import com.uno.Uno.Model.Player;
 import com.uno.Uno.Model.PlayerModel;
@@ -13,26 +13,41 @@ import com.uno.Uno.Model.PlayerModel;
 @Service
 public class LobbyService {
     private final List<Player> playersConnected = new CopyOnWriteArrayList<>();
+    private final List<Player> playersInLobby = new CopyOnWriteArrayList<>();
 
-    public void addPlayer(String sessionId, String name) {
-        if (playersConnected.stream().anyMatch(p -> p.getSessionId().equals(sessionId))) {
-            throw new PlayerAlreadyConnected("Player " + sessionId + " with name '" + name + "' already connected.");
+    public void addPlayer(String UUID, String name) {
+        if (playersConnected.stream().anyMatch(p -> p.getUUID().equals(UUID))) {
+            throw new PlayerAlreadyConnected("Player " + UUID + " with name '" + name + "' already connected.");
         }
-        playersConnected.add(new PlayerModel(sessionId, name));
+        playersConnected.add(new PlayerModel(UUID, name));
     }
 
-    public void removePlayer(String sessionId) {
-        if (playersConnected.stream().noneMatch(p -> p.getSessionId().equals(sessionId))) {
-            throw new NoPlayerConnectedWithSessionId("Player " + sessionId + " is not connected.");
+    public Player removeConnectedPlayer(String UUID) {
+        if (playersConnected.stream().noneMatch(p -> p.getUUID().equals(UUID))) {
+            throw new NoPlayerConnectedWithUUID("Player " + UUID + " is not connected.");
         }
-        playersConnected.removeIf(p -> p.getName().equals(sessionId));
+        Player player = playersConnected.stream().filter(p -> p.getUUID().equals(UUID)).findFirst().get();
+        playersConnected.removeIf(p -> p.getUUID().equals(UUID));
+        return player;
     }
 
-    public List<Player> getPlayers() {
+    public List<Player> getConnectedPlayers() {
         return playersConnected;
     }
 
-    public boolean checkConnection(String sessionId) {
-        return playersConnected.stream().anyMatch(p -> p.getSessionId().equals(sessionId));
+    public List<Player> getPlayersInLobby() {
+        return playersInLobby;
+    }
+
+    public boolean checkConnection(String UUID) {
+        return playersConnected.stream().anyMatch(p -> p.getUUID().equals(UUID));
+    }
+
+    public void addPlayerToLobby(String UUID) {
+        if (playersConnected.stream().noneMatch(p -> p.getUUID().equals(UUID))) {
+            throw new NoPlayerConnectedWithUUID("Player " + UUID + " is not connected.");
+        }
+        Player player = removeConnectedPlayer(UUID);
+        playersInLobby.add(player);
     }
 }

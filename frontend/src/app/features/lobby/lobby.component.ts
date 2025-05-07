@@ -20,7 +20,8 @@ export class LobbyComponent {
 
         this.lobbyService.isConnected$.subscribe((connected) => {
             if (connected) {
-                this.lobbyService.getPlayers();
+                this.lobbyService.getConnectedPlayers();
+                this.lobbyService.getPlayersInLobby();
             }
         });
 

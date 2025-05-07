@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class Player {
-    String sessionId;
+    String UUID;
     String name;
     List<CardModel> hand;
 

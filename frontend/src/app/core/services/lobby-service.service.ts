@@ -16,6 +16,9 @@ export class LobbyService {
     private isConnectedSubject = new BehaviorSubject<boolean>(false);
     public isConnected$ = this.isConnectedSubject.asObservable();
 
+    private playerInLobbySubject = new BehaviorSubject<boolean>(false);
+    public playerInLobby$ = this.playerInLobbySubject.asObservable();
+
     constructor() { 
         this.client = new Client({
             brokerURL: `ws://${window.location.hostname}:8080/ws`,
@@ -27,21 +30,26 @@ export class LobbyService {
             this.isConnectedSubject.next(true);
 
             // Subscribe to get players
-            this.client.subscribe('/topic/lobby/getPlayers', (message) => {
+            this.client.subscribe('/topic/lobby/getConnectedPlayers', (message) => {
                 const json = JSON.parse(message.body);
                 const players: Player[] = this.mappingPlayers(json);
                 console.log('Received player list:', players);
                 this.playersSubject.next(players);
             });
 
-            // Subscribe to add players
-            this.client.subscribe('/topic/lobby/join', () => {
+            // Subscribe to add connected players
+            this.client.subscribe('/topic/lobby/joinConnected', () => {
                 console.log("Join");
             });
 
             // Subscribe to check connection
             this.client.subscribe('/topic/lobby/check-connection', (message) => {
                 this.isConnectedSubject.next(message.body === "true");
+            });
+
+            // Subscribe to add player to lobby
+            this.client.subscribe('/topic/lobbyaddPlayerToLobby', () => {
+                console.log("Add player to lobby.");
             });
         }
 
@@ -65,17 +73,37 @@ export class LobbyService {
         console.log(playerId);
 
         this.client.publish({
-            destination: '/app/lobby/join',
+            destination: '/app/lobby/joinConnected',
             body: JSON.stringify({ name: name, playerId: playerId })
         });
 
-        setTimeout(() => this.getPlayers(), 100);
+        setTimeout(() => this.getConnectedPlayers(), 100);
+        setTimeout(() => this.getPlayersInLobby(), 100);
     }
 
-    public getPlayers(): void {
+    public addPlayerToLobby(): void {
+        const UUDI = this.getPlayerId();
+        if (!UUDI) return;
+
         this.client.publish({
-            destination: '/app/lobby/getPlayers',
+            destination: '/app/lobby/joinConnected',
+            body: JSON.stringify({UUID: UUDI})
+        });
+
+        setTimeout(() => this.getConnectedPlayers(), 100);
+        setTimeout(() => this.getPlayersInLobby(), 100);
+    }
+
+    public getConnectedPlayers(): void {
+        this.client.publish({
+            destination: '/app/lobby/getConnectedPlayers',
             body: ''
+        });
+    }
+
+    public getPlayersInLobby(): void {
+        this.client.publish({
+            destination: '/app/lobby/getPlayersInLobby'
         });
     }
 
@@ -104,6 +132,12 @@ export class LobbyService {
         const newId = this.fallbackUUID();
         localStorage.setItem('playerId', newId);
         return newId;
+    }
+
+    private getPlayerId(): string | undefined {
+        const storedId = localStorage.getItem('playerId');
+        if (storedId) return storedId;
+        return undefined;
     }
     
     private fallbackUUID(): string {
