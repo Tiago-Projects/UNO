@@ -3,6 +3,7 @@ import { Player } from '../../core/models/Player/player';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { LobbyService } from '../../core/services/lobby-service.service';
+import { PlayerInSlot } from '../../core/models/Player/player-in-slot';
 
 
 @Component({
@@ -14,7 +15,7 @@ import { LobbyService } from '../../core/services/lobby-service.service';
 })
 export class LobbyComponent {
     connectedPlayers!: (Player | null)[];
-    playerInLobby!: (Player | null)[];
+    playerInLobby!: PlayerInSlot[];
     slotCount:number = 4;
 
 
@@ -45,7 +46,12 @@ export class LobbyComponent {
     
 
     public getPlayerAt(index: number): Player | null {
-        return this.playerInLobby?.[index] ?? null;
+        for (let i = 0; i < this.playerInLobby.length; i++) {
+            if (this.playerInLobby[i].getSlot() === index) {
+                return this.playerInLobby[i].getPlayer();
+            }
+        }
+        return null;
     }
 
     public isPlayerInLobby(index: number): boolean {

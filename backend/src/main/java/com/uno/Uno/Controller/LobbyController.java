@@ -1,5 +1,7 @@
 package com.uno.Uno.Controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.uno.Uno.Dto.PlayerDto;
 import com.uno.Uno.Mapper.PlayerMapper;
+import com.uno.Uno.Model.Player;
 import com.uno.Uno.Service.LobbyService;
 
 import lombok.Data;
@@ -41,17 +44,23 @@ public class LobbyController {
 
     @MessageMapping("/lobby/addPlayerToLobby")
     @SendTo("/topic/lobby/addPlayerToLobby")
-    public List<PlayerDto> addPlayerToLobby(PlayerInSlot playerInSlot) {
-        lobbyService.addPlayerToLobby(playerInSlot.getUUID(), playerInSlot.getSlot()); 
+    public List<PlayerInSlotDto> addPlayerToLobby(PlayerInSlot playerInSlot) {
+        lobbyService.addPlayerToSlot(playerInSlot.getUUID(), playerInSlot.getSlot()); 
         return getPlayersInLobby();
     }
 
     @MessageMapping("/lobby/getPlayersInLobby")
     @SendTo("/topic/lobby/getPlayersInLobby")
-    public List<PlayerDto> getPlayersInLobby() {
-        return lobbyService.getPlayersInLobby().stream()
-            .map(player -> player != null ? PlayerMapper.toDto(player) : null)
-            .toList();
+    public List<PlayerInSlotDto> getPlayersInLobby() {
+        List<PlayerInSlotDto> playerInSlots = new ArrayList<>();
+
+        for(Integer index: lobbyService.getPlayersInLobby().getSlots().keySet()) {
+            PlayerInSlotDto playerInSlot = new PlayerInSlotDto();
+            playerInSlot.setSlot(index);
+            playerInSlot.setPlayerDto(PlayerMapper.toDto(lobbyService.getPlayersInLobby().getSlots().get(index)));
+            playerInSlots.add(playerInSlot);
+        }
+        return playerInSlots;
     }
 
 
@@ -74,5 +83,12 @@ public class LobbyController {
         @JsonProperty("UUID")
         private String UUID;
         private Integer slot;
+    }
+
+
+    @Data 
+    public static class PlayerInSlotDto {
+        private Integer slot;
+        private PlayerDto playerDto;
     }
 }

@@ -3,6 +3,7 @@ import { Client } from '@stomp/stompjs';
 import { Player } from '../models/Player/player';
 import { BehaviorSubject } from 'rxjs';
 import { Card } from '../models/card/card';
+import { PlayerInSlot } from '../models/Player/player-in-slot';
 
 @Injectable({
     providedIn: 'root'
@@ -16,7 +17,7 @@ export class LobbyService {
     private isConnectedSubject = new BehaviorSubject<boolean>(false);
     public isConnected$ = this.isConnectedSubject.asObservable();
 
-    private playerInLobbySubject = new BehaviorSubject<(Player | null)[]>([]);
+    private playerInLobbySubject = new BehaviorSubject<PlayerInSlot[]>([]);
     public playerInLobby$ = this.playerInLobbySubject.asObservable();
 
     constructor() { 
@@ -51,7 +52,7 @@ export class LobbyService {
             this.client.subscribe('/topic/lobby/addPlayerToLobby', (message) => {
                 console.log("Add player to lobby.");
                 const json = JSON.parse(message.body);
-                const players: (Player | null)[] = this.mappingPlayers(json);
+                const players: PlayerInSlot[] = this.mappingPlayers(json);
                 console.log('Received player list:', players);
                 this.playerInLobbySubject.next(players);
             });
@@ -59,7 +60,7 @@ export class LobbyService {
             // Subscribe to get players in lobby
             this.client.subscribe('/topic/lobby/getPlayersInLobby', (message) => {
                 const json = JSON.parse(message.body);
-                const players: (Player | null)[] = this.mappingPlayers(json);
+                const players: PlayerInSlot[] = this.mappingPlayers(json);
                 console.log('Received player list:', players);
                 this.playerInLobbySubject.next(players);
             });
@@ -163,25 +164,25 @@ export class LobbyService {
     }
 
 
-    private mappingPlayers(json: any): (Player | null)[] {
+    private mappingPlayers(json: any): PlayerInSlot[] {
         console.log('Mapping players:', json);
 
         if (!Array.isArray(json)) return [];
 
-        const players: (Player | null)[] = json.map((playerJson: any) => {
+        const players: PlayerInSlot[] = json.map((playerJson: any) => {
 
-            if (!playerJson?.name) return null;
+            if (!playerJson.playerDto) return new PlayerInSlot(playerJson.slot, null);
 
-            const name = playerJson?.name ?? 'Unknown';
-            const handJson = Array.isArray(playerJson?.hand) ? playerJson.hand : [];
-            
+            const name = playerJson.playerDto.name;
+            const handJson = playerJson.playerDto.hand;
+        
             const hand = handJson.map((cardJson: any) => {
-                const suit = cardJson?.suit ?? 'UNKNOWN';
-                const type = cardJson?.suit ?? 'UNKNOWN';
+                const suit = cardJson.suit;
+                const type = cardJson.suit;
                 return new Card(suit, type);
             })
 
-            return new Player(name, hand);
+            return new PlayerInSlot(playerJson.slot , new Player(name, hand));
         });
 
         return players;
