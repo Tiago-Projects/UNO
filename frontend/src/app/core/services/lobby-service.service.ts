@@ -10,7 +10,7 @@ import { Card } from '../models/card/card';
 export class LobbyService {
     private client: Client;
 
-    private playersConnectedSubject = new BehaviorSubject<(Player | null)[]>([]);
+    private playersConnectedSubject = new BehaviorSubject<Player[]>([]);
     public playersConnected$ = this.playersConnectedSubject.asObservable();
 
     private isConnectedSubject = new BehaviorSubject<boolean>(false);
@@ -29,15 +29,34 @@ export class LobbyService {
             console.log('Lobby Connected: ' + frame);
             this.isConnectedSubject.next(true);
 
-            // Subscribe to get connected players
-            this.client.subscribe('/topic/lobby/getConnectedPlayers', (message) => {
+            // Subscribe to add connected players
+            this.client.subscribe('/topic/lobby/joinConnected', (message) => {
+                console.log("Joining lobby.");
                 const json = JSON.parse(message.body);
-                const players: (Player | null)[] = this.mappingPlayers(json);
-                console.log('Received player list:', players);
+                const players: (Player[]) = this.mappingConnectedPlayers(json);
+                console.log('Received connected player list:', players);
                 this.playersConnectedSubject.next(players);
             });
 
-            // Subscribe to get players
+            // Subscribe to get connected players
+            this.client.subscribe('/topic/lobby/getConnectedPlayers', (message) => {
+                const json = JSON.parse(message.body);
+                const players: Player[] = this.mappingConnectedPlayers(json);
+                console.log('Received connected player list:', players);
+                this.playersConnectedSubject.next(players);
+            });
+
+
+            // Subscribe to add player to lobby
+            this.client.subscribe('/topic/lobby/addPlayerToLobby', (message) => {
+                console.log("Add player to lobby.");
+                const json = JSON.parse(message.body);
+                const players: (Player | null)[] = this.mappingPlayers(json);
+                console.log('Received player list:', players);
+                this.playerInLobbySubject.next(players);
+            });
+
+            // Subscribe to get players in lobby
             this.client.subscribe('/topic/lobby/getPlayersInLobby', (message) => {
                 const json = JSON.parse(message.body);
                 const players: (Player | null)[] = this.mappingPlayers(json);
@@ -45,20 +64,14 @@ export class LobbyService {
                 this.playerInLobbySubject.next(players);
             });
 
-            // Subscribe to add connected players
-            this.client.subscribe('/topic/lobby/joinConnected', () => {
-                console.log("Join");
-            });
+            
 
             // Subscribe to check connection
             this.client.subscribe('/topic/lobby/check-connection', (message) => {
                 this.isConnectedSubject.next(message.body === "true");
             });
 
-            // Subscribe to add player to lobby
-            this.client.subscribe('/topic/lobby/addPlayerToLobby', () => {
-                console.log("Add player to lobby.");
-            });
+
         }
 
         this.client.onWebSocketError = (error) => {
@@ -69,7 +82,6 @@ export class LobbyService {
             console.error('Stomp error:', frame.headers['message']);
             console.error('Additional details:', frame.body);
         }
-
     }
 
     public connect() {
@@ -78,15 +90,11 @@ export class LobbyService {
 
     public joinLobby(name: string): void {
         const playerId = this.getOrCreatePlayerId();
-        console.log(playerId);
 
         this.client.publish({
             destination: '/app/lobby/joinConnected',
             body: JSON.stringify({ name: name, playerId: playerId })
         });
-
-        setTimeout(() => this.getConnectedPlayers(), 100);
-        setTimeout(() => this.getPlayersInLobby(), 100);
     }
 
     public addPlayerToLobby(): void {
@@ -97,9 +105,6 @@ export class LobbyService {
             destination: '/app/lobby/joinConnected',
             body: JSON.stringify({UUID: UUID})
         });
-
-        setTimeout(() => this.getConnectedPlayers(), 100);
-        setTimeout(() => this.getPlayersInLobby(), 100);
     }
 
     public getConnectedPlayers(): void {
@@ -111,13 +116,13 @@ export class LobbyService {
 
     public getPlayersInLobby(): void {
         this.client.publish({
-            destination: '/app/lobby/getPlayersInLobby'
+            destination: '/app/lobby/getPlayersInLobby',
+            body: ''
         });
     }
 
     public checkConnection(): void {
         const playerId = this.getOrCreatePlayerId();
-        console.log(playerId);
         this.client.publish({
             destination: '/app/lobby/check-connection',
             body: playerId
@@ -129,18 +134,39 @@ export class LobbyService {
             destination: '/app/lobby/addPlayerToLobby',
             body: JSON.stringify({UUID: this.getPlayerId(), slot: slot})
         });
-
-        setTimeout(() => this.getConnectedPlayers(), 100);
-        setTimeout(() => this.getPlayersInLobby(), 100);
     }
 
-    
-    private mappingPlayers(json: any): (Player | null)[] {
+
+
+    private mappingConnectedPlayers(json: any): Player[] {
         console.log('Mapping players:', json);
 
         if (!Array.isArray(json)) {
             return [];
         }
+
+        const players: Player[] = json.map((playerJson: any) => {
+
+            const name = playerJson.name;
+            const handJson = Array.isArray(playerJson?.hand) ? playerJson.hand : [];
+            
+            const hand = handJson.map((cardJson: any) => {
+                const suit = cardJson.suit;
+                const type = cardJson.type;
+                return new Card(suit, type);
+            })
+
+            return new Player(name, hand);
+        });
+
+        return players;
+    }
+
+
+    private mappingPlayers(json: any): (Player | null)[] {
+        console.log('Mapping players:', json);
+
+        if (!Array.isArray(json)) return [];
 
         const players: (Player | null)[] = json.map((playerJson: any) => {
 

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.uno.Uno.Exception.NoPlayerConnectedWithUUID;
 import com.uno.Uno.Exception.PlayerAlreadyConnected;
+import com.uno.Uno.Exception.PlayerAlreadyInLobby;
 import com.uno.Uno.Model.Player;
 import com.uno.Uno.Model.PlayerModel;
 
@@ -43,14 +44,31 @@ public class LobbyService {
     }
 
     public boolean checkConnection(String UUID) {
-        return playersConnected.stream().anyMatch(p -> p.getUUID().equals(UUID)) || playersInLobby.stream().anyMatch(p -> p.getUUID().equals(UUID));
+        return isConnected(UUID) || inLobby(UUID);
+    }
+
+    private boolean isConnected(String UUID) {
+        return playersConnected.stream().anyMatch(p -> p.getUUID().equals(UUID));
+    }
+
+    private boolean inLobby(String UUID) {
+        for (Player player: playersInLobby) {
+            if (player != null && player.getUUID().equals(UUID)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void addPlayerToLobby(String UUID, Integer slot) {
-        System.out.println(UUID);
         if (playersConnected.stream().noneMatch(p -> p.getUUID().equals(UUID))) {
             throw new NoPlayerConnectedWithUUID("Player " + UUID + " is not connected.");
         }
+        if (inLobby(UUID)) {
+            throw new PlayerAlreadyInLobby("Player " + UUID + " is already in lobby.");
+        }
+
         Player player = removeConnectedPlayer(UUID);
         playersInLobby.set(slot, player);
     }

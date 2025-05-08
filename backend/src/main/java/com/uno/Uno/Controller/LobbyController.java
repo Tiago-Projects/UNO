@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.uno.Uno.Dto.PlayerDto;
 import com.uno.Uno.Mapper.PlayerMapper;
-import com.uno.Uno.Model.Player;
 import com.uno.Uno.Service.LobbyService;
 
 import lombok.Data;
@@ -21,15 +20,30 @@ public class LobbyController {
     @Autowired
     private LobbyService lobbyService;
 
+
+    // Connect
+
     @MessageMapping("/lobby/joinConnected")
-    public void joinLobby(JoinRequest request) {
+    @SendTo("/topic/lobby/joinConnected")
+    public List<PlayerDto> joinLobby(JoinRequest request) {
         lobbyService.addPlayer(request.getPlayerId(), request.getName());
+        return getConnectedPlayers();
     }
 
     @MessageMapping("/lobby/getConnectedPlayers")
     @SendTo("/topic/lobby/getConnectedPlayers")
     public List<PlayerDto> getConnectedPlayers() {
         return lobbyService.getConnectedPlayers().stream().map(PlayerMapper::toDto).toList();
+    }
+
+
+    // Add Player into a Slot of Lobby
+
+    @MessageMapping("/lobby/addPlayerToLobby")
+    @SendTo("/topic/lobby/addPlayerToLobby")
+    public List<PlayerDto> addPlayerToLobby(PlayerInSlot playerInSlot) {
+        lobbyService.addPlayerToLobby(playerInSlot.getUUID(), playerInSlot.getSlot()); 
+        return getPlayersInLobby();
     }
 
     @MessageMapping("/lobby/getPlayersInLobby")
@@ -40,16 +54,13 @@ public class LobbyController {
             .toList();
     }
 
+
+    // Check if Person is connected or on lobby.
+
     @MessageMapping("/lobby/check-connection")
     @SendTo("/topic/lobby/check-connection")
     public boolean checkConnection(String UUID) {
         return lobbyService.checkConnection(UUID);
-    }
-
-    @MessageMapping("/lobby/addPlayerToLobby")
-    @SendTo("/topic/lobby/addPlayerToLobby")
-    public void addPlayerToLobby(PlayerInSlot playerInSlot) {
-        lobbyService.addPlayerToLobby(playerInSlot.getUUID(), playerInSlot.getSlot()); 
     }
 
     @Data
