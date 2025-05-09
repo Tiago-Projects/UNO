@@ -31,36 +31,30 @@ export class LobbyService {
             this.isConnectedSubject.next(true);
 
             // Subscribe to add connected players
-            this.client.subscribe('/topic/lobby/joinConnected', (message) => {
-                console.log("Joining lobby.");
-                const json = JSON.parse(message.body);
-                const players: (Player[]) = this.mappingConnectedPlayers(json);
+            this.client.subscribe('/topic/repository/add', (message) => {
+                const players: (Player[]) = this.mappingRepositoryPlayers(JSON.parse(message.body));
                 console.log('Received connected player list:', players);
                 this.playersConnectedSubject.next(players);
             });
 
             // Subscribe to get connected players
-            this.client.subscribe('/topic/lobby/getConnectedPlayers', (message) => {
-                const json = JSON.parse(message.body);
-                const players: Player[] = this.mappingConnectedPlayers(json);
+            this.client.subscribe('/topic/repository/get', (message) => {
+                const players: (Player[]) = this.mappingRepositoryPlayers(JSON.parse(message.body));
                 console.log('Received connected player list:', players);
                 this.playersConnectedSubject.next(players);
             });
 
 
             // Subscribe to add player to lobby
-            this.client.subscribe('/topic/lobby/addPlayerToLobby', (message) => {
-                console.log("Add player to lobby.");
-                const json = JSON.parse(message.body);
-                const players: PlayerInSlot[] = this.mappingPlayers(json);
+            this.client.subscribe('/topic/lobby/add', (message) => {
+                const players: PlayerInSlot[] = this.mappingPlayers(JSON.parse(message.body));
                 console.log('Received player list:', players);
                 this.playerInLobbySubject.next(players);
             });
 
             // Subscribe to get players in lobby
-            this.client.subscribe('/topic/lobby/getPlayersInLobby', (message) => {
-                const json = JSON.parse(message.body);
-                const players: PlayerInSlot[] = this.mappingPlayers(json);
+            this.client.subscribe('/topic/lobby/get', (message) => {
+                const players: PlayerInSlot[] = this.mappingPlayers(JSON.parse(message.body));
                 console.log('Received player list:', players);
                 this.playerInLobbySubject.next(players);
             });
@@ -68,7 +62,7 @@ export class LobbyService {
             
 
             // Subscribe to check connection
-            this.client.subscribe('/topic/lobby/check-connection', (message) => {
+            this.client.subscribe('/topic/global/check-connection', (message) => {
                 this.isConnectedSubject.next(message.body === "true");
             });
 
@@ -93,31 +87,21 @@ export class LobbyService {
         const playerId = this.getOrCreatePlayerId();
 
         this.client.publish({
-            destination: '/app/lobby/joinConnected',
+            destination: '/app/repository/add',
             body: JSON.stringify({ name: name, playerId: playerId })
-        });
-    }
-
-    public addPlayerToLobby(): void {
-        const UUID = this.getPlayerId();
-        if (!UUID) return;
-
-        this.client.publish({
-            destination: '/app/lobby/joinConnected',
-            body: JSON.stringify({UUID: UUID})
         });
     }
 
     public getConnectedPlayers(): void {
         this.client.publish({
-            destination: '/app/lobby/getConnectedPlayers',
+            destination: '/app/repository/get',
             body: ''
         });
     }
 
     public getPlayersInLobby(): void {
         this.client.publish({
-            destination: '/app/lobby/getPlayersInLobby',
+            destination: '/app/lobby/get',
             body: ''
         });
     }
@@ -125,23 +109,21 @@ export class LobbyService {
     public checkConnection(): void {
         const playerId = this.getOrCreatePlayerId();
         this.client.publish({
-            destination: '/app/lobby/check-connection',
+            destination: '/app/global/check-connection',
             body: playerId
         });
     }
 
     public joinPlayerSlot(slot: number): void {
         this.client.publish({
-            destination: '/app/lobby/addPlayerToLobby',
+            destination: '/app/lobby/add',
             body: JSON.stringify({UUID: this.getPlayerId(), slot: slot})
         });
     }
 
 
 
-    private mappingConnectedPlayers(json: any): Player[] {
-        console.log('Mapping players:', json);
-
+    private mappingRepositoryPlayers(json: JSON): Player[] {
         if (!Array.isArray(json)) {
             return [];
         }
@@ -164,9 +146,7 @@ export class LobbyService {
     }
 
 
-    private mappingPlayers(json: any): PlayerInSlot[] {
-        console.log('Mapping players:', json);
-
+    private mappingPlayers(json: JSON): PlayerInSlot[] {
         if (!Array.isArray(json)) return [];
 
         const players: PlayerInSlot[] = json.map((playerJson: any) => {
