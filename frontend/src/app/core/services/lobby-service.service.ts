@@ -11,6 +11,14 @@ import { PlayerInSlot } from '../models/Player/player-in-slot';
 export class LobbyService {
     private client: Client;
 
+    private readonly TOPIC: string = '/topic'
+    private readonly APP: string = '/app'
+    private readonly REPOSITORY_ADD: string = '/repository/add';
+    private readonly REPOSITORY_GET: string = '/repository/get';
+    private readonly LOBBY_ADD: string = '/lobby/add';
+    private readonly LOBBY_GET: string = '/lobby/get';
+    private readonly GLOBAL_CHECK_CONNECTION: string = '/global/check-connection';
+
     private playersConnectedSubject = new BehaviorSubject<Player[]>([]);
     public playersConnected$ = this.playersConnectedSubject.asObservable();
 
@@ -20,7 +28,7 @@ export class LobbyService {
     private playerInLobbySubject = new BehaviorSubject<PlayerInSlot[]>([]);
     public playerInLobby$ = this.playerInLobbySubject.asObservable();
 
-    constructor() { 
+    constructor() {
         this.client = new Client({
             brokerURL: `ws://${window.location.hostname}:8080/ws`,
             reconnectDelay: 5000,
@@ -30,43 +38,15 @@ export class LobbyService {
             console.log('Lobby Connected: ' + frame);
             this.isConnectedSubject.next(true);
 
-            // Subscribe to add connected players
-            this.client.subscribe('/topic/repository/add', (message) => {
-                const players: (Player[]) = this.mappingRepositoryPlayers(JSON.parse(message.body));
-                console.log('Received connected player list:', players);
-                this.playersConnectedSubject.next(players);
-            });
-
-            // Subscribe to get connected players
-            this.client.subscribe('/topic/repository/get', (message) => {
-                const players: (Player[]) = this.mappingRepositoryPlayers(JSON.parse(message.body));
-                console.log('Received connected player list:', players);
-                this.playersConnectedSubject.next(players);
-            });
-
-
-            // Subscribe to add player to lobby
-            this.client.subscribe('/topic/lobby/add', (message) => {
-                const players: PlayerInSlot[] = this.mappingPlayers(JSON.parse(message.body));
-                console.log('Received player list:', players);
-                this.playerInLobbySubject.next(players);
-            });
-
-            // Subscribe to get players in lobby
-            this.client.subscribe('/topic/lobby/get', (message) => {
-                const players: PlayerInSlot[] = this.mappingPlayers(JSON.parse(message.body));
-                console.log('Received player list:', players);
-                this.playerInLobbySubject.next(players);
-            });
-
-            
+            this.subscribeToTopic(this.TOPIC + this.REPOSITORY_ADD, this.mappingRepositoryPlayers, this.playersConnectedSubject);
+            this.subscribeToTopic(this.TOPIC + this.REPOSITORY_GET, this.mappingRepositoryPlayers, this.playersConnectedSubject);
+            this.subscribeToTopic(this.TOPIC + this.LOBBY_ADD, this.mappingPlayers, this.playerInLobbySubject);
+            this.subscribeToTopic(this.TOPIC + this.LOBBY_GET, this.mappingPlayers, this.playerInLobbySubject);
 
             // Subscribe to check connection
-            this.client.subscribe('/topic/global/check-connection', (message) => {
+            this.client.subscribe(this.TOPIC + this.GLOBAL_CHECK_CONNECTION, (message) => {
                 this.isConnectedSubject.next(message.body === "true");
             });
-
-
         }
 
         this.client.onWebSocketError = (error) => {
@@ -79,29 +59,48 @@ export class LobbyService {
         }
     }
 
+    private subscribeToTopic(topic: string, mapper: any, subject: BehaviorSubject<any>): void {
+        this.client.subscribe(topic, (message) => {
+            const mapped = mapper(JSON.parse(message.body));
+            console.log(mapped);
+            subject.next(mapped);
+        })
+    }
+
     public connect() {
         this.client.activate();
+    }
+
+    public disconnect() {
+        this.client.deactivate();
     }
 
     public joinLobby(name: string): void {
         const playerId = this.getOrCreatePlayerId();
 
         this.client.publish({
-            destination: '/app/repository/add',
+            destination: this.APP + this.REPOSITORY_ADD,
             body: JSON.stringify({ name: name, playerId: playerId })
         });
     }
 
     public getConnectedPlayers(): void {
         this.client.publish({
-            destination: '/app/repository/get',
+            destination: this.APP + this.REPOSITORY_GET,
             body: ''
+        });
+    }
+
+    public joinPlayerSlot(slot: number): void {
+        this.client.publish({
+            destination: this.APP + this.LOBBY_ADD,
+            body: JSON.stringify({ UUID: this.getPlayerId(), slot: slot })
         });
     }
 
     public getPlayersInLobby(): void {
         this.client.publish({
-            destination: '/app/lobby/get',
+            destination: this.APP + this.LOBBY_GET,
             body: ''
         });
     }
@@ -109,17 +108,12 @@ export class LobbyService {
     public checkConnection(): void {
         const playerId = this.getOrCreatePlayerId();
         this.client.publish({
-            destination: '/app/global/check-connection',
+            destination: this.APP + this.GLOBAL_CHECK_CONNECTION,
             body: playerId
         });
     }
 
-    public joinPlayerSlot(slot: number): void {
-        this.client.publish({
-            destination: '/app/lobby/add',
-            body: JSON.stringify({UUID: this.getPlayerId(), slot: slot})
-        });
-    }
+
 
 
 
@@ -132,7 +126,7 @@ export class LobbyService {
 
             const name = playerJson.name;
             const handJson = Array.isArray(playerJson?.hand) ? playerJson.hand : [];
-            
+
             const hand = handJson.map((cardJson: any) => {
                 const suit = cardJson.suit;
                 const type = cardJson.type;
@@ -155,14 +149,14 @@ export class LobbyService {
 
             const name = playerJson.playerDto.name;
             const handJson = playerJson.playerDto.hand;
-        
+
             const hand = handJson.map((cardJson: any) => {
                 const suit = cardJson.suit;
-                const type = cardJson.suit;
+                const type = cardJson.type;
                 return new Card(suit, type);
             })
 
-            return new PlayerInSlot(playerJson.slot , new Player(name, hand));
+            return new PlayerInSlot(playerJson.slot, new Player(name, hand));
         });
 
         return players;
@@ -180,7 +174,7 @@ export class LobbyService {
     public getPlayerId(): string | null {
         return localStorage.getItem('playerId');
     }
-    
+
     private fallbackUUID(): string {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             const r = Math.random() * 16 | 0;

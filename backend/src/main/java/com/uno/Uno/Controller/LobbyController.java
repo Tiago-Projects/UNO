@@ -41,8 +41,8 @@ public class LobbyController {
 
     @MessageMapping("/lobby/add")
     @SendTo("/topic/lobby/add")
-    public List<PlayerInSlotDto> addPlayerToLobby(PlayerInSlotRequestDto playerInSlot) {
-        lobbyService.addPlayerToSlot(playerInSlot.getUUID(), playerInSlot.getSlot()); 
+    public List<PlayerInSlotDto> addPlayerToLobby(PlayerInSlotRequestDto playerInSlotRequestDto) {
+        lobbyService.addPlayerToSlot(playerInSlotRequestDto.getUUID(), playerInSlotRequestDto.getSlot()); 
         return getPlayersInLobby();
     }
 
