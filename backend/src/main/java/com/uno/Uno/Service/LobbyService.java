@@ -37,6 +37,11 @@ public class LobbyService {
         }
 
         String lobbyID = "Lobby 1"; // TODO: change this when needed more lobbies.
+
+        if (lobbyManager.isPlayerInLobby(lobbyID, uuid)) {
+            throw new IllegalArgumentException("Player " + uuid + " already in lobby.");
+        }
+
         Lobby lobby = lobbyManager.getLobby(lobbyID);
         lobby.assignPlayerToSlot(uuid, playerRepository.get(uuid), slot);
 

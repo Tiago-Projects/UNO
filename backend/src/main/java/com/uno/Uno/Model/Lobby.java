@@ -26,4 +26,13 @@ public class Lobby {
     public Map<Integer, Player> getSlots() {
         return this.slots;
     }
+
+    public boolean isPlayerInLobby(String playerUuid) {
+        for (Player player: slots.values()) {
+            if (player.getUUID().equals(playerUuid)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

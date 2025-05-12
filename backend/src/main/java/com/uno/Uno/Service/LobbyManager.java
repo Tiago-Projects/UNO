@@ -23,4 +23,8 @@ public class LobbyManager {
     public void removeLobby(String lobbyId) {
         lobbies.remove(lobbyId);
     }
+
+    public boolean isPlayerInLobby(String lobbyId, String playerUuid) {
+        return lobbies.get(lobbyId).isPlayerInLobby(playerUuid);
+    }
 }
