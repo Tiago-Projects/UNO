@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.uno.Uno.Exception.NoPlayerConnectedWithUUID;
 import com.uno.Uno.Exception.PlayerAlreadyConnected;
+import com.uno.Uno.Model.BotModel;
 import com.uno.Uno.Model.Lobby;
 import com.uno.Uno.Model.Player;
 import com.uno.Uno.Model.PlayerModel;
@@ -35,7 +36,6 @@ public class LobbyService {
         if (player == null) {
             throw new NoPlayerConnectedWithUUID(uuid);
         }
-
         String lobbyID = "Lobby 1"; // TODO: change this when needed more lobbies.
 
         if (lobbyManager.isPlayerInLobby(lobbyID, uuid)) {
@@ -43,9 +43,18 @@ public class LobbyService {
         }
 
         Lobby lobby = lobbyManager.getLobby(lobbyID);
-        lobby.assignPlayerToSlot(uuid, playerRepository.get(uuid), slot);
+        lobby.assignPlayerToSlot(lobbyID, playerRepository.get(uuid), slot);
 
         // playerRepository.remove(uuid); // TODO: maybe add this. Careful with checkConnection.
+    }
+
+    public void addBotToSlot(int slot) {
+        Player player = new BotModel("Bot " + slot, "Bot " + slot);
+
+        String lobbyID = "Lobby 1"; // TODO: change this when needed more lobbies.
+
+        Lobby lobby = lobbyManager.getLobby(lobbyID);
+        lobby.assignPlayerToSlot(lobbyID, player, slot);
     }
 
     public Collection<Player> getConnectedPlayers() {

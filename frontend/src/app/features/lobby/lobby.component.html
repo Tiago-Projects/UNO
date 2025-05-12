@@ -10,12 +10,16 @@
                     <button *ngIf="!isPlayerInLobby(i)" class="lobby-button" (click)="addPlayerToSlot(i)">
                         Enter room
                     </button>
-                    <button class="lobby-button" (click)="addBot()">
+                    <button class="lobby-button" (click)="addBot(i)">
                         Add Bot
                     </button>
                 </ng-template>
             </div>
         </div>
+
+        <button class="start-button" [disabled]="allPlayersInLobby()" (click)="startGame()"> 
+            Start Game
+        </button>
     </div>
 
     <div class="players">

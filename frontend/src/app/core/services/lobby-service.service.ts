@@ -16,6 +16,7 @@ export class LobbyService {
     private readonly REPOSITORY_ADD: string = '/repository/add';
     private readonly REPOSITORY_GET: string = '/repository/get';
     private readonly LOBBY_ADD: string = '/lobby/add';
+    private readonly LOBBY_ADD_BOT: string = '/lobby/addBot';
     private readonly LOBBY_GET: string = '/lobby/get';
     private readonly GLOBAL_CHECK_CONNECTION: string = '/global/check-connection';
 
@@ -41,7 +42,9 @@ export class LobbyService {
             this.subscribeToTopic(this.TOPIC + this.REPOSITORY_ADD, this.mappingRepositoryPlayers, this.playersConnectedSubject);
             this.subscribeToTopic(this.TOPIC + this.REPOSITORY_GET, this.mappingRepositoryPlayers, this.playersConnectedSubject);
             this.subscribeToTopic(this.TOPIC + this.LOBBY_ADD, this.mappingPlayers, this.playerInLobbySubject);
+            this.subscribeToTopic(this.TOPIC + this.LOBBY_ADD_BOT, this.mappingPlayers, this.playerInLobbySubject);
             this.subscribeToTopic(this.TOPIC + this.LOBBY_GET, this.mappingPlayers, this.playerInLobbySubject);
+
 
             // Subscribe to check connection
             this.client.subscribe(this.TOPIC + this.GLOBAL_CHECK_CONNECTION, (message) => {
@@ -95,6 +98,13 @@ export class LobbyService {
         this.client.publish({
             destination: this.APP + this.LOBBY_ADD,
             body: JSON.stringify({ UUID: this.getPlayerId(), slot: slot })
+        });
+    }
+
+    public addBotToSlot(slot: number): void {
+        this.client.publish({
+            destination: this.APP + this.LOBBY_ADD_BOT,
+            body: JSON.stringify({ slot: slot })
         });
     }
 

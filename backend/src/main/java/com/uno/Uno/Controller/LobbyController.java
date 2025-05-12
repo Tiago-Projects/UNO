@@ -8,6 +8,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
+import com.uno.Uno.Dto.BotInSlotRequestDto;
 import com.uno.Uno.Dto.JoinRequestDto;
 import com.uno.Uno.Dto.PlayerDto;
 import com.uno.Uno.Dto.PlayerInSlotDto;
@@ -43,6 +44,13 @@ public class LobbyController {
     @SendTo("/topic/lobby/add")
     public List<PlayerInSlotDto> addPlayerToLobby(PlayerInSlotRequestDto playerInSlotRequestDto) {
         lobbyService.addPlayerToSlot(playerInSlotRequestDto.getUUID(), playerInSlotRequestDto.getSlot()); 
+        return getPlayersInLobby();
+    }
+    
+    @MessageMapping("/lobby/addBot")
+    @SendTo("/topic/lobby/addBot")
+    public List<PlayerInSlotDto> addBotToLobby(BotInSlotRequestDto botInSlotRequestDto) {
+        lobbyService.addBotToSlot(botInSlotRequestDto.getSlot()); 
         return getPlayersInLobby();
     }
 

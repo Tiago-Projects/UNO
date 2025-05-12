@@ -62,8 +62,15 @@ export class LobbyComponent {
         this.lobbyService.joinPlayerSlot(index);
     }
 
-    public addBot(): void {
-        // TODO: Add bot
-        return;
+    public addBot(index: number): void {
+        this.lobbyService.addBotToSlot(index);
+    }
+
+    public allPlayersInLobby(): boolean {
+        return this.playerInLobby.length != 4;
+    }
+
+    public startGame(): void {
+        console.log("Start Game!");
     }
 }
