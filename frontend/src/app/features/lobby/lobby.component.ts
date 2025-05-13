@@ -15,7 +15,6 @@ import { PlayerSlotComponent } from '../player-slot/player-slot.component';
   styleUrl: './lobby.component.css'
 })
 export class LobbyComponent {
-    connectedPlayers!: (Player | null)[];
     playerInLobby!: PlayerInSlot[];
     slotCount:number = 4;
     players: (Player | null)[] = [new Player("Player1", []), null, null, null];
@@ -25,15 +24,7 @@ export class LobbyComponent {
 
         this.lobbyService.isConnected$.subscribe((connected) => {
             if (connected) {
-                this.lobbyService.getConnectedPlayers();
                 this.lobbyService.getPlayersInLobby();
-            }
-        });
-
-        this.lobbyService.playersConnected$.subscribe((players) => {
-            if (players) {
-                this.connectedPlayers = players;
-                console.log('Connected players updated: ', this.connectedPlayers);
             }
         });
 

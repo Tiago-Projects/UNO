@@ -31,12 +31,6 @@ public class LobbyController {
         return getRepository();
     }
 
-    @MessageMapping("/repository/get")
-    @SendTo("/topic/repository/get")
-    public List<PlayerDto> getRepository() {
-        return lobbyService.getConnectedPlayers().stream().map(PlayerMapper::toDto).toList();
-    }
-
 
     // Add Player into a Slot of Lobby
 

@@ -14,14 +14,10 @@ export class LobbyService {
     private readonly TOPIC: string = '/topic'
     private readonly APP: string = '/app'
     private readonly REPOSITORY_ADD: string = '/repository/add';
-    private readonly REPOSITORY_GET: string = '/repository/get';
     private readonly LOBBY_ADD: string = '/lobby/add';
     private readonly LOBBY_ADD_BOT: string = '/lobby/addBot';
     private readonly LOBBY_GET: string = '/lobby/get';
     private readonly GLOBAL_CHECK_CONNECTION: string = '/global/check-connection';
-
-    private playersConnectedSubject = new BehaviorSubject<Player[]>([]);
-    public playersConnected$ = this.playersConnectedSubject.asObservable();
 
     private isConnectedSubject = new BehaviorSubject<boolean>(false);
     public isConnected$ = this.isConnectedSubject.asObservable();
@@ -39,12 +35,12 @@ export class LobbyService {
             console.log('Lobby Connected: ' + frame);
             this.isConnectedSubject.next(true);
 
-            this.subscribeToTopic(this.TOPIC + this.REPOSITORY_ADD, this.mappingRepositoryPlayers, this.playersConnectedSubject);
-            this.subscribeToTopic(this.TOPIC + this.REPOSITORY_GET, this.mappingRepositoryPlayers, this.playersConnectedSubject);
             this.subscribeToTopic(this.TOPIC + this.LOBBY_ADD, this.mappingPlayers, this.playerInLobbySubject);
             this.subscribeToTopic(this.TOPIC + this.LOBBY_ADD_BOT, this.mappingPlayers, this.playerInLobbySubject);
             this.subscribeToTopic(this.TOPIC + this.LOBBY_GET, this.mappingPlayers, this.playerInLobbySubject);
 
+
+            this.client.subscribe(this.TOPIC + this.REPOSITORY_ADD, () => {});
 
             // Subscribe to check connection
             this.client.subscribe(this.TOPIC + this.GLOBAL_CHECK_CONNECTION, (message) => {
@@ -87,13 +83,6 @@ export class LobbyService {
         });
     }
 
-    public getConnectedPlayers(): void {
-        this.client.publish({
-            destination: this.APP + this.REPOSITORY_GET,
-            body: ''
-        });
-    }
-
     public joinPlayerSlot(slot: number): void {
         this.client.publish({
             destination: this.APP + this.LOBBY_ADD,
@@ -121,32 +110,6 @@ export class LobbyService {
             destination: this.APP + this.GLOBAL_CHECK_CONNECTION,
             body: playerId
         });
-    }
-
-
-
-
-
-    private mappingRepositoryPlayers(json: JSON): Player[] {
-        if (!Array.isArray(json)) {
-            return [];
-        }
-
-        const players: Player[] = json.map((playerJson: any) => {
-
-            const name = playerJson.name;
-            const handJson = Array.isArray(playerJson?.hand) ? playerJson.hand : [];
-
-            const hand = handJson.map((cardJson: any) => {
-                const suit = cardJson.suit;
-                const type = cardJson.type;
-                return new Card(suit, type);
-            })
-
-            return new Player(name, hand);
-        });
-
-        return players;
     }
 
 

@@ -57,10 +57,6 @@ public class LobbyService {
         lobby.assignPlayerToSlot(lobbyID, player, slot);
     }
 
-    public Collection<Player> getConnectedPlayers() {
-        return playerRepository.getAll();
-    }
-
     public Lobby getPlayersInLobby() {
         String lobbyID = "Lobby 1"; // TODO: change this when needed more lobbies.
         return lobbyManager.getLobby(lobbyID);
