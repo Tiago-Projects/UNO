@@ -4,12 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { LobbyService } from '../../core/services/lobby-service.service';
 import { PlayerInSlot } from '../../core/models/Player/player-in-slot';
+import { PlayerSlotComponent } from '../player-slot/player-slot.component';
 
 
 @Component({
   selector: 'app-lobby',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, PlayerSlotComponent],
   templateUrl: './lobby.component.html',
   styleUrl: './lobby.component.css'
 })
@@ -17,7 +18,7 @@ export class LobbyComponent {
     connectedPlayers!: (Player | null)[];
     playerInLobby!: PlayerInSlot[];
     slotCount:number = 4;
-
+    players: (Player | null)[] = [new Player("Player1", []), null, null, null];
 
     constructor(private lobbyService: LobbyService) {
         this.lobbyService.connect();

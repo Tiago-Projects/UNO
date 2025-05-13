@@ -1,32 +1,16 @@
-<div class="lobby-container"> 
-    <div class="lobby">
-        <h1 class="title"> Lobby </h1>
-        <div class="lobby-players">
-            <div class="lobby-player" *ngFor="let slot of [].constructor(slotCount); let i = index"> 
-                <ng-container *ngIf="getPlayerAt(i); else emptySlot">
-                    {{ getPlayerAt(i)?.getName() }}
-                </ng-container>
-                <ng-template #emptySlot>
-                    <button *ngIf="!isPlayerInLobby(i)" class="lobby-button" (click)="addPlayerToSlot(i)">
-                        Enter room
-                    </button>
-                    <button class="lobby-button" (click)="addBot(i)">
-                        Add Bot
-                    </button>
-                </ng-template>
-            </div>
-        </div>
+<div class="lobby-wrapper">
 
-        <button class="start-button" [disabled]="allPlayersInLobby()" (click)="startGame()"> 
-            Start Game
-        </button>
+    <!-- Background -->
+    <div class="background-container"></div>
+
+
+    <!-- Players -->
+    <div class="lobby-main">
+        <app-player-slot 
+            *ngFor="let player of players; let i = index"
+            [player]="player"
+            [index]="i"
+            class="lobby-slot"
+        ></app-player-slot>
     </div>
-
-    <div class="players">
-        <h1 class="title"> Players </h1>
-        <div *ngFor="let player of connectedPlayers; let i = index" class="players-player"> 
-            {{ player?.getName() }}
-        </div>
-    </div>
-
 </div>
