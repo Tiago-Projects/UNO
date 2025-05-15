@@ -7,21 +7,31 @@ import com.uno.Uno.Entity.PlayerEntity;
 import com.uno.Uno.Exception.PlayerAlreadyConnected;
 import com.uno.Uno.Repository.PlayerRepository;
 
+
+/**
+ * Service responsible for managing player registation and lobby access. <p>
+ * 
+ * This service interacts with the {@link PlayerRepository} to persists and verify players.
+ * TODO: Interacts with LobbyManager.
+ * 
+ */
 @Service
 public class LobbyService {
 
     private final PlayerRepository playerRepository;
-    private final LobbyManager lobbyManager;
 
-    public LobbyService(PlayerRepository playerRepository, LobbyManager lobbyManager) {
+    public LobbyService(PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
-        this.lobbyManager = lobbyManager;
     }
- 
+    
+    /**
+     * Registers a new player in the system if they are not already present.
+     * 
+     * @param playerId the unique identifier of the player
+     * @param name     the name of the player
+     * @throws PlayerAlreadyConnected if a player with the given ID already exists
+     */
     public void addPlayer(String playerId, String name) {
-        for (PlayerEntity playerEntity: playerRepository.findAll()) {
-            System.out.println(playerEntity);
-        }
         if (playerRepository.existsById(playerId)){
             throw new PlayerAlreadyConnected("Player already exists with UUID: " + playerId);
         }
@@ -29,43 +39,13 @@ public class LobbyService {
         playerRepository.save(new PlayerEntity(playerId, name));
     }
 
+    /**
+     * Checks if a player with the given ID exists in the system.
+     * 
+     * @param playerId the ID to check
+     * @return true if the player exists; false otherwise
+     */
     public boolean existPlayer(String playerId) {
         return playerRepository.existsById(playerId);
     }
-
-
-    // public void addPlayerToSlot(String uuid, int slot) {
-    //     Player player = playerRepository.get(uuid);
-    //     if (player == null) {
-    //         throw new NoPlayerConnectedWithUUID(uuid);
-    //     }
-    //     String lobbyID = "Lobby 1"; // TODO: change this when needed more lobbies.
-
-    //     if (lobbyManager.isPlayerInLobby(lobbyID, uuid)) {
-    //         throw new IllegalArgumentException("Player " + uuid + " already in lobby.");
-    //     }
-
-    //     Lobby lobby = lobbyManager.getLobby(lobbyID);
-    //     lobby.assignPlayerToSlot(lobbyID, playerRepository.get(uuid), slot);
-
-    //     // playerRepository.remove(uuid); // TODO: maybe add this. Careful with checkConnection.
-    // }
-
-    // public void addBotToSlot(int slot) {
-    //     Player player = new BotModel("Bot " + slot, "Bot " + slot);
-
-    //     String lobbyID = "Lobby 1"; // TODO: change this when needed more lobbies.
-
-    //     Lobby lobby = lobbyManager.getLobby(lobbyID);
-    //     lobby.assignPlayerToSlot(lobbyID, player, slot);
-    // }
-
-    // public Lobby getPlayersInLobby() {
-    //     String lobbyID = "Lobby 1"; // TODO: change this when needed more lobbies.
-    //     return lobbyManager.getLobby(lobbyID);
-    // }
-
-    // public boolean checkConnection(String uuid) {
-    //     return playerRepository.exists(uuid);
-    // }
 }
