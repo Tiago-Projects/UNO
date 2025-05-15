@@ -13,6 +13,14 @@ services:
       - ~/.m2:/root/.m2
     working_dir: /app
     command: ./mvnw spring-boot:run -Dspring.devtools.restart.enabled=true
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/uno_db
+      - SPRING_DATASOURCE_USERNAME=uno_db_user
+      - SPRING_DATASOURCE_PASSWORD=uno_db_pass
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
+    depends_on:
+      - db
   frontend:
     build:
       context: ./frontend
@@ -27,3 +35,18 @@ services:
       - /app/node_modules
     working_dir: /app
     command: npm run start
+  
+  db:
+    image: postgres:latest
+    container_name: uno-db-dev
+    environment:
+      POSTGRES_USER: uno_db_user
+      POSTGRES_PASSWORD: uno_db_pass
+      POSTGRES_DB: uno_db
+    volumes:
+     - postgres-data:/var/lib/postgresql/data
+    ports:
+     - "5432:5432"
+  
+volumes:
+  postgres-data:

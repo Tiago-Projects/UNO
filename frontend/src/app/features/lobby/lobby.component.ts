@@ -22,12 +22,6 @@ export class LobbyComponent {
     constructor(private lobbyService: LobbyService) {
         this.lobbyService.connect();
 
-        this.lobbyService.isConnected$.subscribe((connected) => {
-            if (connected) {
-                this.lobbyService.getPlayersInLobby();
-            }
-        });
-
         this.lobbyService.playerInLobby$.subscribe((players) => {
             if(players) {
                 this.playerInLobby = players;
@@ -48,14 +42,6 @@ export class LobbyComponent {
 
     public isPlayerInLobby(index: number): boolean {
         return false; // TODO: check if player is already on lobby or not.
-    }
-
-    public addPlayerToSlot(index: number): void {
-        this.lobbyService.joinPlayerSlot(index);
-    }
-
-    public addBot(index: number): void {
-        this.lobbyService.addBotToSlot(index);
     }
 
     public allPlayersInLobby(): boolean {

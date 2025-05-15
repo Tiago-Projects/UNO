@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { GameState } from './core/models/GameState/game-state';
 import { HttpClient } from '@angular/common/http';
 import { WebSocketService } from './core/services/web-socket.service';
 import { LobbyService } from './core/services/lobby-service.service';
+import { filter, take } from 'rxjs';
 
-import {filter, switchMap, take} from 'rxjs/operators';
 
 @Component({
     selector: 'app-root',
@@ -18,39 +17,29 @@ import {filter, switchMap, take} from 'rxjs/operators';
 export class AppComponent {
 
     title = 'UNO';
-    gameState!: GameState;
 
-    constructor(private gameWebSocketController: WebSocketService, private lobbyService: LobbyService, private http: HttpClient, private router: Router) {
-        this.injectGlobalSvgFilters();          // Inject filters.svg
+    constructor(
+        private gameWebSocketController: WebSocketService,
+        private lobbyService: LobbyService,
+        private http: HttpClient,
+        private router: Router
+    ) {
+        // Inject filters.svg
+        this.injectGlobalSvgFilters();          
 
+        // Connect WebSockets
         this.gameWebSocketController.connect();
         this.lobbyService.connect();
 
-        this.gameWebSocketController.gameState$.subscribe((gameState) => {
-            if (gameState) {
-                this.gameState = gameState;
-                console.log('Game state updated:', this.gameState);
-            }
+        // TODO: MAKE THIS WORK
+        // Check if player is already in database
+        this.lobbyService.checkPlayerStatus().subscribe((isConnected) => {
+            const path = isConnected ? 'lobby' : 'home';
+            this.router.navigate([path]);
         });
-
-        
-
-        setTimeout(() => this.lobbyService.checkConnection(), 100);
-        this.lobbyService.isConnected$.pipe(
-            filter(connected => connected),
-            take(1),
-            switchMap(() => {
-                this.lobbyService.checkConnection();
-                return this.lobbyService.isConnected$;
-            })
-        ).subscribe((connected) => {
-            if (!connected && this.router.url !== '/home') {
-                this.router.navigate(['/home']);
-            }
-        });
-        
     }
-    
+
+
     private injectGlobalSvgFilters(): void {
         this.http.get('assets/filters.svg', { responseType: 'text' }).subscribe((svgContent) => {
             const div = document.createElement('div');

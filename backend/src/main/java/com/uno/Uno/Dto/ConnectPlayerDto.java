@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class JoinRequestDto {
+public class ConnectPlayerDto {
     private String name;
     private String playerId;
 }

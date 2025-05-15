@@ -18,9 +18,9 @@ export class HomeComponent {
         lobbyService.connect();
     }
 
-    public connect(): void {
-        if (!this.playerName.trim()) return;
-        this.lobbyService.joinLobby(this.playerName);
-        this.router.navigate(['/lobby']);
+    protected connectPlayer(): void {
+        if (this.playerName.trim() == "") return;
+        this.lobbyService.connectPlayer(this.playerName);
+        this.router.navigate(['lobby']);
     }
 }

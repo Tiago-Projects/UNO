@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Client } from '@stomp/stompjs';
 import { Player } from '../models/Player/player';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, filter, Observable, Subject, switchMap, take, tap } from 'rxjs';
 import { Card } from '../models/card/card';
 import { PlayerInSlot } from '../models/Player/player-in-slot';
 
@@ -19,8 +19,11 @@ export class LobbyService {
     private readonly LOBBY_GET: string = '/lobby/get';
     private readonly GLOBAL_CHECK_CONNECTION: string = '/global/check-connection';
 
-    private isConnectedSubject = new BehaviorSubject<boolean>(false);
+    private isConnectedSubject = new Subject<boolean>();
     public isConnected$ = this.isConnectedSubject.asObservable();
+
+    private connectedSubject = new BehaviorSubject<boolean>(false);
+    public connected$ = this.connectedSubject.asObservable();
 
     private playerInLobbySubject = new BehaviorSubject<PlayerInSlot[]>([]);
     public playerInLobby$ = this.playerInLobbySubject.asObservable();
@@ -29,23 +32,25 @@ export class LobbyService {
         this.client = new Client({
             brokerURL: `ws://${window.location.hostname}:8080/ws`,
             reconnectDelay: 5000,
+            heartbeatIncoming: 4000,
+            heartbeatOutgoing: 4000,
         });
 
         this.client.onConnect = (frame) => {
             console.log('Lobby Connected: ' + frame);
-            this.isConnectedSubject.next(true);
 
             this.subscribeToTopic(this.TOPIC + this.LOBBY_ADD, this.mappingPlayers, this.playerInLobbySubject);
             this.subscribeToTopic(this.TOPIC + this.LOBBY_ADD_BOT, this.mappingPlayers, this.playerInLobbySubject);
             this.subscribeToTopic(this.TOPIC + this.LOBBY_GET, this.mappingPlayers, this.playerInLobbySubject);
 
-
-            this.client.subscribe(this.TOPIC + this.REPOSITORY_ADD, () => {});
+            this.client.subscribe(this.TOPIC + this.REPOSITORY_ADD, () => { });
 
             // Subscribe to check connection
-            this.client.subscribe(this.TOPIC + this.GLOBAL_CHECK_CONNECTION, (message) => {
+            this.client.subscribe("/topic/repository/checkPlayer", (message) => {
                 this.isConnectedSubject.next(message.body === "true");
             });
+
+            this.connectedSubject.next(true);
         }
 
         this.client.onWebSocketError = (error) => {
@@ -66,52 +71,40 @@ export class LobbyService {
         })
     }
 
-    public connect() {
+    public connect(): void {
         this.client.activate();
     }
 
-    public disconnect() {
+    public disconnect(): void {
         this.client.deactivate();
     }
 
-    public joinLobby(name: string): void {
-        const playerId = this.getOrCreatePlayerId();
-
+    public connectPlayer(name: string): void {
         this.client.publish({
-            destination: this.APP + this.REPOSITORY_ADD,
-            body: JSON.stringify({ name: name, playerId: playerId })
+            destination: '/app/repository/add',
+            body: JSON.stringify({ playerId: this.getOrCreatePlayerId(), name: name })
         });
     }
 
-    public joinPlayerSlot(slot: number): void {
+    public checkPlayer(): void {
         this.client.publish({
-            destination: this.APP + this.LOBBY_ADD,
-            body: JSON.stringify({ UUID: this.getPlayerId(), slot: slot })
+            destination: '/app/repository/checkPlayer',
+            body: JSON.stringify({ playerId: this.getOrCreatePlayerId() })
         });
     }
 
-    public addBotToSlot(slot: number): void {
-        this.client.publish({
-            destination: this.APP + this.LOBBY_ADD_BOT,
-            body: JSON.stringify({ slot: slot })
-        });
+    public checkPlayerStatus(): Observable<boolean> {
+        return this.connected$.pipe(
+            filter(connected => connected),
+            take(1),
+            switchMap(() => {
+                return this.isConnected$.pipe(take(1));
+            }),
+            tap(() => {
+                this.checkPlayer();
+            })
+        );
     }
-
-    public getPlayersInLobby(): void {
-        this.client.publish({
-            destination: this.APP + this.LOBBY_GET,
-            body: ''
-        });
-    }
-
-    public checkConnection(): void {
-        const playerId = this.getOrCreatePlayerId();
-        this.client.publish({
-            destination: this.APP + this.GLOBAL_CHECK_CONNECTION,
-            body: playerId
-        });
-    }
-
 
     private mappingPlayers(json: JSON): PlayerInSlot[] {
         if (!Array.isArray(json)) return [];
