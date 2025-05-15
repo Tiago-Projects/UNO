@@ -1,8 +1,0 @@
-<div class="player-hand"> 
-    <div class="player-card" *ngFor="let card of player.getHand(); let i = index" [ngStyle]="getStyle(i)">
-        <app-card 
-            [card]="card" 
-            [card_dimensions]="getCardDimensions()" 
-        ></app-card>
-    </div>  
-</div>

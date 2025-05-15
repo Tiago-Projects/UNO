@@ -1,38 +1,61 @@
 package com.uno.Uno.Model;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
+import com.uno.Uno.Entity.PlayerEntity;
+
+
+/**
+ * Represents a game lobby where player can join and wait for a match to start.<p>
+ * 
+ * Each lobby has a unique identifier and supports up to 4 players.
+ * Players are stores in the order they join. The lobby ensures that no duplicate
+ * player are added and that the maximum player limit is respected.
+ * 
+ */
 public class Lobby {
     private final String id;
-    private final Map<Integer, Player> slots = new ConcurrentHashMap<>();
+    private final List<PlayerEntity> players = Collections.synchronizedList(new ArrayList<>());
 
     public Lobby(String id) {
         this.id = id;
     }
 
-    public void assignPlayerToSlot(String lobbyId, Player player, int slot) {
-        if (slot < 0 || slot > 3) {
-            throw new IllegalArgumentException("Invalid slot number: " + slot);
-        }
-
-        if (player == null) {
-            throw new IllegalStateException("No player found with UUID: " + player.getUUID());
-        }
-
-        slots.put(slot, player);
+    public String getId() {
+        return this.id;
     }
 
-    public Map<Integer, Player> getSlots() {
-        return this.slots;
+    public List<PlayerEntity> getPlayers() {
+        return this.players;
     }
 
-    public boolean isPlayerInLobby(String playerUuid) {
-        for (Player player: slots.values()) {
-            if (player.getUUID().equals(playerUuid)) {
-                return true;
-            }
+    public synchronized void addPlayer(PlayerEntity player) {
+        if (isPlayerInLobby(player.getId())) {
+            throw new IllegalStateException("Player already in lobby: " + player);
         }
-        return false;
+
+        if (isFull()) {
+            throw new IllegalStateException("Lobby is full.");
+        }
+
+        players.add(player);
+    }
+
+    public synchronized void removePlayer(String playerId) {
+        players.removeIf(p -> p.getId().equals(playerId));
+    }
+
+    public boolean isPlayerInLobby(String playerId) {
+        return players.stream().anyMatch(p -> p.getId().equals(playerId));
+    }
+
+    public boolean isEmpty() {
+        return players.isEmpty();
+    }
+
+    public boolean isFull() {
+        return players.size() >= 4;
     }
 }

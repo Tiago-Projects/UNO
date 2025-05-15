@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { Player } from '../../core/models/Player/player';
 import { CommonModule } from '@angular/common';
 import { EllipseComponent } from '../../shared/SVG/ellipse.component';
 import { DefaultUserComponent } from '../../shared/SVG/default-user.component';
+import { PlayerEntity } from '../../core/Model/player-entity';
 
 @Component({
   selector: 'app-player-slot',
@@ -12,7 +12,7 @@ import { DefaultUserComponent } from '../../shared/SVG/default-user.component';
   styleUrl: './player-slot.component.css'
 })
 export class PlayerSlotComponent {
-    @Input({required: true}) player!: (Player | null);
+    @Input({required: true}) player!: (PlayerEntity | null);
     @Input({required: true}) index!: number;
 
     public getColor(): string {

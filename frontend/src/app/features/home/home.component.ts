@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { LobbyService } from '../../core/services/lobby-service.service';
+import { LobbyService } from '../../core/Service/lobby.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 

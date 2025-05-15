@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PlayerDto {
-    private String name;
-    private CardDto[] hand; // Changed from List<CardDto> to CardDto[]
+public class PlayerExistsResponse {
+    private String playerId;
+    private boolean exists;
 }
