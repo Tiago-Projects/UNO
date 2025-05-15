@@ -1,7 +1,5 @@
 package com.uno.Uno.Model;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,9 +12,4 @@ import lombok.Setter;
 public abstract class Player {
     String UUID;
     String name;
-    List<CardModel> hand;
-
-    public boolean addCard(CardModel card) {
-        return this.hand.add(card);
-    }
 }
